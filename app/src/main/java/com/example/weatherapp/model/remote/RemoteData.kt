@@ -2,7 +2,12 @@ package com.example.weatherapp.model.remote
 
 import android.util.Log
 import com.example.weatherapp.model.CurrentWeatherResponse
+import com.example.weatherapp.model.DailyForecast
+import com.example.weatherapp.model.WeatherInfo
 import com.example.weatherapp.model.WeatherResponse
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class RemoteData :IremoteData {
     val services :ApiServices = RetrofitClient.service
@@ -20,4 +25,48 @@ class RemoteData :IremoteData {
         return  services.getWeatherForecast(lat = lat,
             lon = lon)
     }
+
+
+   override fun getDailyForecasts(weatherResponse: WeatherResponse): List<DailyForecast> {
+        val dailyForecasts = mutableMapOf<String, MutableList<WeatherInfo>>()
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()) // To extract the date
+        val dayFormat = SimpleDateFormat("EEEE", Locale.getDefault()) // To extract the day name (Monday, etc.)
+
+        // Group by day
+        for (weatherInfo in weatherResponse.list) {
+            val date = Date(weatherInfo.dt * 1000) // Convert dt to Date
+            val formattedDate = dateFormat.format(date) // Format as yyyy-MM-dd
+            dailyForecasts.computeIfAbsent(formattedDate) { mutableListOf() }.add(weatherInfo)
+        }
+
+        // Aggregate data for each day
+        val result = mutableListOf<DailyForecast>()
+        for ((formattedDate, weatherInfoList) in dailyForecasts) {
+            val date = dateFormat.parse(formattedDate)!! // Parse the formatted date back into a Date object
+            val dayName = dayFormat.format(date) // Get the day name (e.g., Monday)
+
+            val minTemp = weatherInfoList.minOf { it.main.temp_min }
+            val maxTemp = weatherInfoList.maxOf { it.main.temp_max }
+            val avgHumidity = weatherInfoList.map { it.main.humidity }.average()
+
+            // Choose a representative weather description and icon (e.g., the first entry)
+            val representativeWeather = weatherInfoList[0].weather[0]
+
+            result.add(
+                DailyForecast(
+                    date = formattedDate,
+                    dayName = dayName,           // Add the day name
+                    minTemp = minTemp,
+                    maxTemp = maxTemp,
+                    avgHumidity = avgHumidity,
+                    weatherDescription = representativeWeather.description,
+                    icon = representativeWeather.icon
+                )
+            )
+        }
+
+        return result
+    }
+
+
 }

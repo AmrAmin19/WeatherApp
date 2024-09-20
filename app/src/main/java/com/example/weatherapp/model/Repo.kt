@@ -1,6 +1,9 @@
 package com.example.weatherapp.model
 
 import com.example.weatherapp.model.remote.IremoteData
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class Repo private constructor( private var remoteData : IremoteData):Irepo
 {
@@ -27,6 +30,11 @@ class Repo private constructor( private var remoteData : IremoteData):Irepo
    override suspend fun getForecastWeather(lat: Double,lon: Double) : WeatherResponse
     {
         return  remoteData.getForecastWeather(lat,lon)
+    }
+
+    override fun getDailyForecasts(weatherResponse: WeatherResponse): List<DailyForecast>
+    {
+        return  remoteData.getDailyForecasts(weatherResponse)
     }
 
 }

@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentHomeBinding
@@ -33,6 +34,7 @@ class HomeFragment : Fragment() {
     lateinit var homeViewModel:HomeViewModel
     lateinit var factory: HomeFactory
     lateinit var mainViewModel:MainActivityViewModel
+    lateinit var myAdapter: DailyForcastAdapter
      var lat:Double=0.0
     var lon:Double=0.0
     var isDataFetched = false
@@ -56,6 +58,11 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        myAdapter= DailyForcastAdapter()
+        binding.forecastRecyclerView.layoutManager= LinearLayoutManager(context)
+        binding.forecastRecyclerView.adapter=myAdapter
+
+
        mainViewModel.locationLiveData.observe(viewLifecycleOwner, Observer {
            lat=it.latitude
            lon=it.longitude
@@ -70,7 +77,8 @@ class HomeFragment : Fragment() {
         homeViewModel.currentWeather.observe(viewLifecycleOwner, Observer {
 
 
-           binding.updatedTime.text= convertTimestampToDate(it.dt)
+          binding.updatedTime.text=getString(R.string.timeupdate,convertTimestampToTime(it.dt))
+            binding.dateText.text=convertTimestampToDate(it.dt)
 
             Log.d("AmrDataTest", "${it.weather[0].icon} ")
 
@@ -81,15 +89,12 @@ class HomeFragment : Fragment() {
 
             binding.weatherCondition.text=it.weather[0].main
 
-            binding.temperatureText.text=it.main.temp.toString()
+            binding.temperatureText.text=it.main.temp.toInt().toString()
 
             binding.humadityVal.text=it.main.humidity.toString()
-            binding.windVal.text=it.wind.speed.toString()
-            binding.fellLikeVal.text=it.main.feels_like.toString()
+            binding.windVal.text=getString(R.string.windSpeed,it.wind.speed.toInt().toString())
+            binding.fellLikeVal.text=it.main.feels_like.toInt().toString()
 
-//            Toast.makeText(context, "${convertTimestampToDate(it.dt)}  ${it.main.temp}  ${it.wind.speed}", Toast.LENGTH_SHORT).show()
-//
-//            Log.d("AmrDataTest", "${convertTimestampToDate(it.dt)}  ${it.main.temp}  ${it.wind.speed} ")
 
         })
 
@@ -97,29 +102,33 @@ class HomeFragment : Fragment() {
 
             binding.locationText.text=it.city.name
 
-
-
-            Log.d("AmrDataTest", " ${it.city.name}  ${it.list[0].dt_txt}  ${it.list[1].dt_txt}  ${it.list[2].dt_txt} " +
-                    "${it.list[3].dt_txt} ${it.list[4].dt_txt} ${it.list[5].dt_txt} \n" +
-                    "${it.list[6].dt_txt} ${it.list[7].dt_txt} ${it.list[8].dt_txt} \n" +
-                    "${it.list[9].dt_txt} ${it.list[10].dt_txt} ${it.list[11].dt_txt} \n " +
-                    "${it.list[12].dt_txt} ${it.list[13].dt_txt} ${it.list[14].dt_txt} \n " +
-                    "${it.list[15].dt_txt} ${it.list[16].dt_txt} ${it.list[17].dt_txt} \n" +
-                    "${it.list[18].dt_txt} ${it.list[19].dt_txt} ${it.list[20].dt_txt} \n" +
-                    "${it.list[21].dt_txt} ${it.list[22].dt_txt} ${it.list[23].dt_txt} \n" +
-                    "${it.list[24].dt_txt} ${it.list[25].dt_txt} ${it.list[26].dt_txt} \n")
-//
-//            Toast.makeText(context, "${it.city.name}  ${it.list.get(0).main.temp}  ${it.list[1].main.temp}", Toast.LENGTH_SHORT).show()
         })
+
+        homeViewModel.dailyForecast.observe(viewLifecycleOwner, Observer {
+
+            myAdapter.submitList(it)
+
+        })
+
     }
 
 
     fun convertTimestampToDate(timestamp: Long): String {
         val date = Date(timestamp * 1000) // Convert seconds to milliseconds
-        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        sdf.timeZone = TimeZone.getDefault() // Use the default time zone or set a specific one
+        val sdf = SimpleDateFormat("MMMM dd", Locale.getDefault()) // Format to Month name and day number
+        sdf.timeZone=TimeZone.getDefault()
         return sdf.format(date)
     }
+
+    fun convertTimestampToTime(timestamp: Long): String {
+        val date = Date(timestamp * 1000)
+        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault()) // Format to hours and minutes only
+//        val tz = TimeZone.getTimeZone("GMT${if (timeZone >= 0) "+" else ""}$timeZone")
+//        sdf.timeZone = tz
+        sdf.timeZone=TimeZone.getDefault()
+        return sdf.format(date)
+    }
+
 
 
     private fun fetchWeatherData() {

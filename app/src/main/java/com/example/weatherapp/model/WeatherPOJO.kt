@@ -96,3 +96,14 @@ data class Coord(
     val lat: Double,
     val lon: Double
 )
+
+data class DailyForecast(
+    val date: String,
+    val dayName: String,
+    val minTemp: Double,
+    val maxTemp: Double,
+    val avgHumidity: Double,
+    val weatherDescription: String,
+    val icon: String
+)
+
