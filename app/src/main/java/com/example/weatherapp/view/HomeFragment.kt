@@ -57,6 +57,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        showLoading(true)
 
         myAdapter= DailyForcastAdapter()
         binding.forecastRecyclerView.layoutManager= LinearLayoutManager(context)
@@ -76,8 +77,10 @@ class HomeFragment : Fragment() {
 
         homeViewModel.currentWeather.observe(viewLifecycleOwner, Observer {
 
+            showLoading(false)
 
-          binding.updatedTime.text=getString(R.string.timeupdate,convertTimestampToTime(it.dt))
+
+            binding.updatedTime.text=getString(R.string.timeupdate,convertTimestampToTime(it.dt))
             binding.dateText.text=convertTimestampToDate(it.dt)
 
             Log.d("AmrDataTest", "${it.weather[0].icon} ")
@@ -100,11 +103,16 @@ class HomeFragment : Fragment() {
 
         homeViewModel.forecastWeather.observe(viewLifecycleOwner, Observer {
 
+            showLoading(false)
+
+
             binding.locationText.text=it.city.name
 
         })
 
         homeViewModel.dailyForecast.observe(viewLifecycleOwner, Observer {
+
+            showLoading(false)
 
             myAdapter.submitList(it)
 
@@ -141,5 +149,26 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun showLoading(isLoading: Boolean) {
+       // binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+
+        if (isLoading)
+        {
+            binding.progressBar.visibility=View.VISIBLE
+        }
+        else
+        {
+            binding.progressBar.visibility=View.GONE
+
+            binding.huadityIcon.visibility=View.VISIBLE
+            binding.humadityText.visibility=View.VISIBLE
+
+            binding.windIcon.visibility=View.VISIBLE
+            binding.windText.visibility=View.VISIBLE
+
+            binding.feelsLikeIcon.visibility=View.VISIBLE
+            binding.feelsLikeText.visibility=View.VISIBLE
+        }
+    }
 }
 
