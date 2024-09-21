@@ -1,6 +1,5 @@
-package com.example.weatherapp.view
+package com.example.weatherapp.view.home
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -22,7 +21,9 @@ class DayForcast : DiffUtil.ItemCallback<DailyForecast>() {
     }
 }
 
-class DailyForcastAdapter :ListAdapter<DailyForecast,DailyForcastAdapter.DailyViewHolder>(DayForcast())
+class DailyForcastAdapter :ListAdapter<DailyForecast, DailyForcastAdapter.DailyViewHolder>(
+    DayForcast()
+)
 {
     lateinit var binding: DailyForecastItemBinding
     class DailyViewHolder(val binding: DailyForecastItemBinding):ViewHolder(binding.root)

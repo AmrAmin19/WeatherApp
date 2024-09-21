@@ -68,13 +68,19 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+
     private fun startLocationUpdates() {
 
-        val locationRequest = LocationRequest.create().apply {
-            interval = 5000
-            fastestInterval = 2000
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
+        val locationRequest = LocationRequest.Builder(5000).apply {
+            setMinUpdateIntervalMillis(2000)
+            setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+        }.build()
+
+//        create().apply {
+//            interval = 5000
+//            fastestInterval = 2000
+//            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+//        }
 
         val permissions = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -89,6 +95,9 @@ class MainActivity : AppCompatActivity() {
                     if (location != null) {
                         Log.d("Amr", "onLocationResult: ${location.latitude}, ${location.longitude}")
                         viewModel.updateLocation(location)  // Pass location to ViewModel
+
+                      //  fusedLocationClient.removeLocationUpdates(this)
+
                     }
                 }
             }, Looper.myLooper())

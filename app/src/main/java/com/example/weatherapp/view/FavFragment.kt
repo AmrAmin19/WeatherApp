@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.findNavController
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentFavBinding
@@ -26,9 +27,20 @@ class FavFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.fabOpenMap.setOnClickListener {
-            findNavController().navigate(R.id.action_favFragment_to_mapFragment)
+           findNavController().navigate(R.id.action_favFragment_to_mapFragment)
+          //  openMapFragment()
 
         }
+    }
+
+
+    private fun openMapFragment() {
+        // Replace HomeFragment with MapFragment using FragmentTransaction
+        val mapFragment = MapFragment()
+        parentFragmentManager.beginTransaction()
+            .replace(binding.fragmentContainer.id, mapFragment) // Replace the container with MapFragment
+            .addToBackStack(null) // Add this transaction to the back stack so the user can navigate back
+            .commit()
     }
 
 

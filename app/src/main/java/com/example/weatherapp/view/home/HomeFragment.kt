@@ -1,22 +1,18 @@
-package com.example.weatherapp.view
+package com.example.weatherapp.view.home
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.bumptech.glide.Glide
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentHomeBinding
-import com.example.weatherapp.model.Irepo
 import com.example.weatherapp.model.Repo
 import com.example.weatherapp.model.remote.RemoteData
 import com.example.weatherapp.viewModel.HomeFactory
@@ -37,7 +33,7 @@ class HomeFragment : Fragment() {
     lateinit var factory: HomeFactory
     lateinit var mainViewModel:MainActivityViewModel
     lateinit var myAdapter: DailyForcastAdapter
-    lateinit var hourAdabter:HourlyForcastAdabter
+    lateinit var hourAdabter: HourlyForcastAdabter
 
      var lat:Double=0.0
     var lon:Double=0.0
@@ -161,7 +157,7 @@ class HomeFragment : Fragment() {
 
             homeViewModel.fetchForecastWeather(lat,lon)
         } else {
-            Log.e("HomeFragment", "Invalid location data.")
+            Log.e("AmrData", "Invalid location data.")
         }
     }
 

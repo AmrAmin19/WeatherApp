@@ -1,4 +1,4 @@
-package com.example.weatherapp.view
+package com.example.weatherapp.view.home
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -20,7 +20,9 @@ class HourForcastDiff : DiffUtil.ItemCallback<HourlyForecast>() {
     }
 }
 
-class HourlyForcastAdabter : ListAdapter<HourlyForecast,HourlyForcastAdabter.HourlyForcastViewHolder>(HourForcastDiff())
+class HourlyForcastAdabter : ListAdapter<HourlyForecast, HourlyForcastAdabter.HourlyForcastViewHolder>(
+    HourForcastDiff()
+)
 {
     lateinit var binding:HourlyForcastItemBinding
     class HourlyForcastViewHolder(var binding: HourlyForcastItemBinding) : ViewHolder(binding.root)
