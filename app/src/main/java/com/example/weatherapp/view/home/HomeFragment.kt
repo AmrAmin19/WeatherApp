@@ -1,11 +1,16 @@
 package com.example.weatherapp.view.home
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +23,11 @@ import com.example.weatherapp.model.remote.RemoteData
 import com.example.weatherapp.viewModel.HomeFactory
 import com.example.weatherapp.viewModel.HomeViewModel
 import com.example.weatherapp.viewModel.MainActivityViewModel
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -34,10 +44,12 @@ class HomeFragment : Fragment() {
     lateinit var mainViewModel:MainActivityViewModel
     lateinit var myAdapter: DailyForcastAdapter
     lateinit var hourAdabter: HourlyForcastAdabter
+  //  private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-     var lat:Double=0.0
-    var lon:Double=0.0
-    var isDataFetched = false
+    private var latOld: Double = 0.0
+    private var lonOld: Double = 0.0
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,14 +62,24 @@ class HomeFragment : Fragment() {
 
         binding=FragmentHomeBinding.inflate(inflater,container,false)
 
-      
+     //   fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
+       // startLocationUpdates()
+
+        Log.d("AmrFragment", "onCreateView: ")
+
+
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Log.d("AmrFragment", "onViewCreated: ")
+
         showLoading(true)
+
 
         myAdapter= DailyForcastAdapter()
         hourAdabter= HourlyForcastAdabter()
@@ -70,13 +92,10 @@ class HomeFragment : Fragment() {
 
 
        mainViewModel.locationLiveData.observe(viewLifecycleOwner, Observer {
-           lat=it.latitude
-           lon=it.longitude
 
-           if (!isDataFetched) {
-               fetchWeatherData()
-               isDataFetched = true
-           }
+               //  showLoading(true)
+               fetchWeatherData(it.latitude,it.longitude)
+
        })
 
 
@@ -130,7 +149,13 @@ class HomeFragment : Fragment() {
             hourAdabter.submitList(it)
         })
 
+
+//        binding.swipeRefreshLayout.setOnRefreshListener {
+//            startLocationUpdates()
+//        }
+
     }
+
 
 
     fun convertTimestampToDate(timestamp: Long): String {
@@ -149,28 +174,49 @@ class HomeFragment : Fragment() {
         return sdf.format(date)
     }
 
-
-
-    private fun fetchWeatherData() {
-        if (lat != 0.0 && lon != 0.0) {
-            homeViewModel.fetchCurrentWeather(lat, lon)
-
-            homeViewModel.fetchForecastWeather(lat,lon)
-        } else {
-            Log.e("AmrData", "Invalid location data.")
+    private fun fetchWeatherData(lat: Double, lon: Double) {
+        // Check if the latitude and longitude have changed
+        if (latOld == lat && lonOld == lon) {
+            // If they haven't changed, return early
+            return
         }
+
+        // Update the old latitude and longitude with new values
+        latOld = lat
+        lonOld = lon
+
+        // Fetch the new weather data
+        homeViewModel.fetchCurrentWeather(lat, lon)
+        homeViewModel.fetchForecastWeather(lat, lon)
     }
+
+
+//
+//    private fun fetchWeatherData(lat:Double,lon:Double) {
+//
+//
+//      if (lat != 0.0 && lon != 0.0) {
+//            homeViewModel.fetchCurrentWeather(lat, lon)
+//
+//            homeViewModel.fetchForecastWeather(lat,lon)
+//        } else {
+//            Log.d("AmrData", "Invalid location data.")
+//        }
+//    }
 
     private fun showLoading(isLoading: Boolean) {
        // binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
 
         if (isLoading)
         {
+
+         //   binding.swipeRefreshLayout.isRefreshing = true
             binding.progressBar.visibility=View.VISIBLE
         }
         else
         {
             binding.progressBar.visibility=View.GONE
+           // binding.swipeRefreshLayout.isRefreshing = false
 
             binding.huadityIcon.visibility=View.VISIBLE
             binding.humadityText.visibility=View.VISIBLE
@@ -182,5 +228,7 @@ class HomeFragment : Fragment() {
             binding.feelsLikeText.visibility=View.VISIBLE
         }
     }
+
+
 }
 

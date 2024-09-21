@@ -25,7 +25,7 @@ import com.google.android.gms.location.LocationServices
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
+   private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var viewModel: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         // Initialize Location services
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        startLocationUpdates()
+
 
 
         setSupportActionBar(binding.customToolbar)
@@ -65,62 +65,75 @@ class MainActivity : AppCompatActivity() {
             actionBar?.title = destination.label
         }
 
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            startLocationUpdates()
+        }
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        startLocationUpdates()
     }
 
 
 
     private fun startLocationUpdates() {
-
+        // Build the location request
         val locationRequest = LocationRequest.Builder(5000).apply {
             setMinUpdateIntervalMillis(2000)
             setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
         }.build()
-
-//        create().apply {
-//            interval = 5000
-//            fastestInterval = 2000
-//            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-//        }
 
         val permissions = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
 
+        // Check if permissions are granted
         if (permissions.all { ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED }) {
-            // Both permissions are granted, start location updates
+            // Permissions granted, start location updates
             fusedLocationClient.requestLocationUpdates(locationRequest, object : LocationCallback() {
                 override fun onLocationResult(locationResult: LocationResult) {
                     val location = locationResult.lastLocation
                     if (location != null) {
                         Log.d("Amr", "onLocationResult: ${location.latitude}, ${location.longitude}")
                         viewModel.updateLocation(location)  // Pass location to ViewModel
+                        fusedLocationClient.removeLocationUpdates(this)
 
-                      //  fusedLocationClient.removeLocationUpdates(this)
-
+                        binding.swipeRefreshLayout.isRefreshing = false
                     }
                 }
-            }, Looper.myLooper())
+            }, Looper.myLooper())  // Use main looper
         } else {
-            // Request both permissions
-            ActivityCompat.requestPermissions(this, permissions, 1)
-        }
-    }
-
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 1) {
-            val granted = permissions.zip(grantResults.toTypedArray()).all { it.second == PackageManager.PERMISSION_GRANTED }
-            if (granted) {
-                // All permissions granted, start location updates
-                startLocationUpdates()
+            // Only request permissions if they haven't been requested before
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                // Request permissions if they are not already granted
+                ActivityCompat.requestPermissions(this, permissions, 1)
             } else {
-                // Permission denied, handle accordingly
+                // Handle the case where the user denied the permissions before
                 Log.d("Amr", "Location permissions denied")
             }
         }
     }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1) {
+            // Check if all permissions are granted
+            if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                // Start location updates when permissions are granted
+                startLocationUpdates()
+            } else {
+                // Handle permission denial without requesting permissions again
+                Log.d("Amr", "Location permissions denied")
+            }
+        }
+    }
+
+
+
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
