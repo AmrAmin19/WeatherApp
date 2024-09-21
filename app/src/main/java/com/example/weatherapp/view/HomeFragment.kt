@@ -11,6 +11,8 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.bumptech.glide.Glide
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentHomeBinding
@@ -35,6 +37,8 @@ class HomeFragment : Fragment() {
     lateinit var factory: HomeFactory
     lateinit var mainViewModel:MainActivityViewModel
     lateinit var myAdapter: DailyForcastAdapter
+    lateinit var hourAdabter:HourlyForcastAdabter
+
      var lat:Double=0.0
     var lon:Double=0.0
     var isDataFetched = false
@@ -60,8 +64,13 @@ class HomeFragment : Fragment() {
         showLoading(true)
 
         myAdapter= DailyForcastAdapter()
+        hourAdabter= HourlyForcastAdabter()
+
         binding.forecastRecyclerView.layoutManager= LinearLayoutManager(context)
         binding.forecastRecyclerView.adapter=myAdapter
+
+        binding.recycleHourView.layoutManager=LinearLayoutManager(context,RecyclerView.HORIZONTAL,false)
+        binding.recycleHourView.adapter=hourAdabter
 
 
        mainViewModel.locationLiveData.observe(viewLifecycleOwner, Observer {
@@ -116,6 +125,13 @@ class HomeFragment : Fragment() {
 
             myAdapter.submitList(it)
 
+        })
+
+        homeViewModel.hourlyForecast.observe(viewLifecycleOwner, Observer {
+
+            Log.d("AmrDataTes", "${it.size}  ")
+            
+            hourAdabter.submitList(it)
         })
 
     }

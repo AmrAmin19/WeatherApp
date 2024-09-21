@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="30dp"
+    app:cardElevation="5dp"
+    android:backgroundTint="@color/lightOfWhite">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="13dp">
+
+        <!-- Time TextView (e.g., 12 AM) -->
+        <TextView
+            android:id="@+id/text_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12 AM"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Weather Icon ImageView -->
+        <ImageView
+            android:id="@+id/image_weather_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/weather_icon"
+            android:layout_marginBottom="8dp"/>
+
+
+        <!-- Temperature TextView (e.g., 19°) -->
+        <TextView
+            android:id="@+id/text_temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="19°"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

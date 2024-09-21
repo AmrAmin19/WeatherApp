@@ -107,3 +107,10 @@ data class DailyForecast(
     val icon: String
 )
 
+data class HourlyForecast(
+    val time: String,  // Time of the forecast (e.g., 15:00)
+    val temp: Double,
+    val weatherDescription: String,
+    val icon: String
+)
+

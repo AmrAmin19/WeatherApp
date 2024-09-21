@@ -4,4 +4,5 @@ interface Irepo {
     suspend fun getCurrentWeather(lat: Double,lon: Double) : CurrentWeatherResponse
     suspend fun getForecastWeather(lat: Double,lon: Double) : WeatherResponse
     fun getDailyForecasts(weatherResponse: WeatherResponse): List<DailyForecast>
+    fun getHourlyForecastForToday(weatherResponse: WeatherResponse): List<HourlyForecast>
 }

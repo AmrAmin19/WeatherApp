@@ -3,6 +3,7 @@ package com.example.weatherapp.model.remote
 import android.util.Log
 import com.example.weatherapp.model.CurrentWeatherResponse
 import com.example.weatherapp.model.DailyForecast
+import com.example.weatherapp.model.HourlyForecast
 import com.example.weatherapp.model.WeatherInfo
 import com.example.weatherapp.model.WeatherResponse
 import java.text.SimpleDateFormat
@@ -67,6 +68,43 @@ class RemoteData :IremoteData {
 
         return result
     }
+
+
+
+    override fun getHourlyForecastForToday(weatherResponse: WeatherResponse): List<HourlyForecast> {
+        val hourlyForecasts = mutableListOf<HourlyForecast>()
+        val sdfDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())  // Date formatter
+        val sdfTime = SimpleDateFormat("HH:mm", Locale.getDefault())  // Time formatter
+
+        // Get the date of the first forecast in the response
+        if (weatherResponse.list.isNotEmpty()) {
+            val firstForecastDate = sdfDate.format(Date(weatherResponse.list[0].dt * 1000))  // First forecast date
+
+            // Loop through the list and find the entries for the first forecast date
+            for (weatherInfo in weatherResponse.list) {
+                val forecastDate = sdfDate.format(Date(weatherInfo.dt * 1000))  // Extract the date from dt
+
+                // If the forecast is for the first forecast date
+                if (forecastDate == firstForecastDate) {
+                    val forecastTime = sdfTime.format(Date(weatherInfo.dt * 1000))  // Extract time
+                    val representativeWeather = weatherInfo.weather[0]
+
+                    // Add the forecast for that hour to the list
+                    hourlyForecasts.add(
+                        HourlyForecast(
+                            time = forecastTime,
+                            temp = weatherInfo.main.temp,
+                            weatherDescription = representativeWeather.description,
+                            icon = representativeWeather.icon
+                        )
+                    )
+                }
+            }
+        }
+
+        return hourlyForecasts
+    }
+
 
 
 }

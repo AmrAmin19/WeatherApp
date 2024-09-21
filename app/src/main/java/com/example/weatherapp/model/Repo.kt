@@ -37,4 +37,9 @@ class Repo private constructor( private var remoteData : IremoteData):Irepo
         return  remoteData.getDailyForecasts(weatherResponse)
     }
 
+   override fun getHourlyForecastForToday(weatherResponse: WeatherResponse): List<HourlyForecast>
+    {
+        return remoteData.getHourlyForecastForToday(weatherResponse)
+    }
+
 }

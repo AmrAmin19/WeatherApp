@@ -181,6 +181,17 @@
     </LinearLayout>
 
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleHourView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="4dp"
+        android:clipToPadding="false"
+        android:padding="8dp"
+        android:scrollbars="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/weather_info" />
 
     <!-- Forecast RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
@@ -189,10 +200,10 @@
         android:layout_height="0dp"
         android:layout_marginTop="4dp"
         android:clipToPadding="false"
-        android:padding="16dp"
+        android:padding="8dp"
         android:scrollbars="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/weather_info" />
+        app:layout_constraintTop_toBottomOf="@id/recycleHourView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

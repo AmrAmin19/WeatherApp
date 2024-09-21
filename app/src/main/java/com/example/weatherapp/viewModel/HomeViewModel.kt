@@ -1,11 +1,13 @@
 package com.example.weatherapp.viewModel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.model.CurrentWeatherResponse
 import com.example.weatherapp.model.DailyForecast
+import com.example.weatherapp.model.HourlyForecast
 import com.example.weatherapp.model.Irepo
 import com.example.weatherapp.model.WeatherInfo
 import com.example.weatherapp.model.WeatherResponse
@@ -29,6 +31,10 @@ class HomeViewModel(val repo :Irepo) : ViewModel() {
     val dailyForecast : LiveData<List<DailyForecast>>
         get() = _dailyForecast
 
+    private val _hourlyForecast=MutableLiveData<List<HourlyForecast>>()
+    val hourlyForecast : LiveData<List<HourlyForecast>>
+        get() = _hourlyForecast
+
 
 
     fun fetchCurrentWeather(lat: Double,lon: Double)
@@ -44,9 +50,13 @@ class HomeViewModel(val repo :Irepo) : ViewModel() {
         viewModelScope.launch {
             val fWeather=repo.getForecastWeather(lat,lon)
             val dailyWeather = repo.getDailyForecasts(fWeather)
+            val hourlyweather =repo.getHourlyForecastForToday(fWeather)
+
+            Log.d("AmrDataTest", "${hourlyweather.size}")
 
            _dailyForecast.postValue(dailyWeather)
             _forecastWeather.postValue(fWeather)
+            _hourlyForecast.postValue(hourlyweather)
 
         }
     }
