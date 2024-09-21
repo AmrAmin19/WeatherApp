@@ -14,7 +14,11 @@
         android:id="@+id/favFragment"
         android:name="com.example.weatherapp.view.FavFragment"
         android:label="@string/favorites"
-        tools:layout="@layout/fragment_fav" />
+        tools:layout="@layout/fragment_fav" >
+        <action
+            android:id="@+id/action_favFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+    </fragment>
     <fragment
         android:id="@+id/alertFragment"
         android:name="com.example.weatherapp.view.AlertFragment"
@@ -25,4 +29,9 @@
         android:name="com.example.weatherapp.view.SettingsFragment"
         android:label="@string/settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.example.weatherapp.view.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map" />
 </navigation>

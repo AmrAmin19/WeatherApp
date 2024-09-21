@@ -72,4 +72,8 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1")
 
     implementation("com.google.android.gms:play-services-location:21.1.0")
+
+    implementation ("org.osmdroid:osmdroid-android:6.1.11")
+
+    implementation ("com.google.android.material:material:1.9.0")
 }

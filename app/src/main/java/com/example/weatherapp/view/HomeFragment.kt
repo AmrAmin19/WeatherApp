@@ -130,7 +130,7 @@ class HomeFragment : Fragment() {
         homeViewModel.hourlyForecast.observe(viewLifecycleOwner, Observer {
 
             Log.d("AmrDataTes", "${it.size}  ")
-            
+
             hourAdabter.submitList(it)
         })
 
