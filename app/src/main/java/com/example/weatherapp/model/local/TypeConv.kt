@@ -3,6 +3,8 @@ package com.example.weatherapp.model.local
 import androidx.room.TypeConverter
 import com.example.weatherapp.model.Clouds
 import com.example.weatherapp.model.Coord
+import com.example.weatherapp.model.DailyForecast
+import com.example.weatherapp.model.HourlyForecast
 import com.example.weatherapp.model.Main
 import com.example.weatherapp.model.Rain1h
 import com.example.weatherapp.model.Sys
@@ -89,6 +91,34 @@ class SysConverter {
     @TypeConverter
     fun toSys(value: String): Sys {
         return Gson().fromJson(value, Sys::class.java)
+    }
+}
+
+class HourlyForecastConverter {
+
+    @TypeConverter
+    fun fromHourlyForecastList(hourlyForecasts: List<HourlyForecast>): String {
+        return Gson().toJson(hourlyForecasts)
+    }
+
+    @TypeConverter
+    fun toHourlyForecastList(data: String): List<HourlyForecast> {
+        val listType = object : TypeToken<List<HourlyForecast>>() {}.type
+        return Gson().fromJson(data, listType)
+    }
+}
+
+class DailyForecastConverter {
+
+    @TypeConverter
+    fun fromDailyForecastList(dailyForecasts: List<DailyForecast>): String {
+        return Gson().toJson(dailyForecasts)
+    }
+
+    @TypeConverter
+    fun toDailyForecastList(data: String): List<DailyForecast> {
+        val listType = object : TypeToken<List<DailyForecast>>() {}.type
+        return Gson().fromJson(data, listType)
     }
 }
 

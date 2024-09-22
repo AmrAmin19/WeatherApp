@@ -1,6 +1,8 @@
 package com.example.weatherapp.view.home
 
 
+
+import com.example.weatherapp.model.local.LocalData
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -46,7 +48,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        factory=HomeFactory(Repo.getInstance(RemoteData()))
+        factory=HomeFactory(Repo.getInstance(RemoteData(), LocalData(requireContext())))
         homeViewModel=ViewModelProvider(this,factory).get(HomeViewModel::class.java)
 
         mainViewModel=ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)

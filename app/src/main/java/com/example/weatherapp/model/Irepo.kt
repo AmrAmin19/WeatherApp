@@ -9,8 +9,9 @@ interface Irepo {
 
     // Local
 
-//    suspend fun getAllLocal(): List<CurrentWeatherResponse>
-//    suspend fun insert(currentWeather: CurrentWeatherResponse)
-//    suspend fun delete(currentWeather: CurrentWeatherResponse)
+    suspend fun getAllLocal(): List<CurrentWeather>
+    suspend fun insert(currentWeather: CurrentWeather)
+    suspend fun delete(currentWeather: CurrentWeather)
 
+    fun getCurrentWeatherLocal(weatherResponse: WeatherResponse,currentWeatherResponse: CurrentWeatherResponse):CurrentWeather
 }
