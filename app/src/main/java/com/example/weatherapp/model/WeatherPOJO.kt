@@ -1,5 +1,15 @@
 package com.example.weatherapp.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.example.weatherapp.model.local.CloudsConverter
+import com.example.weatherapp.model.local.CoordConverter
+import com.example.weatherapp.model.local.MainConverter
+import com.example.weatherapp.model.local.Rain1hConverter
+import com.example.weatherapp.model.local.SysConverter
+import com.example.weatherapp.model.local.WeatherConverter
+import com.example.weatherapp.model.local.WindConverter
 import com.google.gson.annotations.SerializedName
 
 data class WeatherResponse(
@@ -10,19 +20,20 @@ data class WeatherResponse(
     val city: City
 )
 
+@Entity(tableName = "weather")
 data class CurrentWeatherResponse(
-    val coord: Coord,
-    val weather: List<Weather>,
+    @TypeConverters(CoordConverter::class) val coord: Coord,
+    @TypeConverters(WeatherConverter::class)val weather: List<Weather>,
     val base: String,
-    val main: Main,
+    @TypeConverters(MainConverter::class) val main: Main,
     val visibility: Int,
-    val wind: Wind,
-    val rain: Rain1h?,
-    val clouds: Clouds,
+    @TypeConverters(WindConverter::class) val wind: Wind,
+    @TypeConverters(Rain1hConverter::class)val rain: Rain1h?,
+    @TypeConverters(CloudsConverter::class) val clouds: Clouds,
     val dt: Long,
-    val sys: Sys,
+    @TypeConverters(SysConverter::class) val sys: Sys,
     val timezone: Int,
-    val id: Int,
+   @PrimaryKey val id: Int,
     val name: String,
     val cod: Int
 )
@@ -81,6 +92,7 @@ data class Sys(
     val pod: String
 )
 
+@Entity(tableName = "city_table")
 data class City(
     val id: Int,
     val name: String,
@@ -97,6 +109,7 @@ data class Coord(
     val lon: Double
 )
 
+@Entity(tableName = "daily_forecast")
 data class DailyForecast(
     val date: String,
     val dayName: String,
@@ -107,10 +120,29 @@ data class DailyForecast(
     val icon: String
 )
 
+@Entity(tableName = "hourly_forecast")
 data class HourlyForecast(
     val time: String,  // Time of the forecast (e.g., 15:00)
     val temp: Double,
     val weatherDescription: String,
     val icon: String
+)
+
+data class CurrentWeather(
+
+    val id: Int,
+    val hourlyForecast: List<HourlyForecast>,
+    val dailyForecast: List<DailyForecast>,
+    val weatherCondition:String,
+    val lat: Double,
+    val lon: Double,
+    val city:String,
+    val dt: Long,
+    val icon : String,
+    val temp: Double,
+    val feels_like: Double,
+    val humidity: Int,
+    val speed: Double,
+
 )
 
