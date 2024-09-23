@@ -12,12 +12,15 @@
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/favFragment"
-        android:name="com.example.weatherapp.view.FavFragment"
+        android:name="com.example.weatherapp.view.favorite.FavFragment"
         android:label="@string/favorites"
         tools:layout="@layout/fragment_fav" >
         <action
             android:id="@+id/action_favFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_favFragment_to_detailsFragment2"
+            app:destination="@id/detailsFragment2" />
     </fragment>
     <fragment
         android:id="@+id/alertFragment"
@@ -33,5 +36,18 @@
         android:id="@+id/mapFragment"
         android:name="com.example.weatherapp.view.MapFragment"
         android:label="fragment_map"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map" >
+        <action
+            android:id="@+id/action_mapFragment_to_favFragment"
+            app:destination="@id/favFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailsFragment2"
+        android:name="com.example.weatherapp.DetailsFragment"
+        android:label="@string/favorites"
+        tools:layout="@layout/fragment_details" >
+        <action
+            android:id="@+id/action_detailsFragment2_to_favFragment"
+            app:destination="@id/favFragment" />
+    </fragment>
 </navigation>

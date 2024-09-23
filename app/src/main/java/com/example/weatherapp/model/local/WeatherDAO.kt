@@ -7,15 +7,16 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.weatherapp.model.CurrentWeather
 import com.example.weatherapp.model.CurrentWeatherResponse
+import com.example.weatherapp.model.FavWeather
 
 @Dao
 interface WeatherDAO {
-    @Query("SELECT * FROM current_weather_table")
-    suspend fun getAllLocal(): List<CurrentWeather>
+    @Query("SELECT * FROM fav_weather")
+    suspend fun getAllLocal(): List<FavWeather>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(currentWeather: CurrentWeather)
+    suspend fun insert(favWeather: FavWeather)
 
     @Delete
-    suspend fun delete(currentWeather: CurrentWeather)
+    suspend fun delete(favWeather: FavWeather)
 }

@@ -7,8 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentMapBinding
+import com.example.weatherapp.viewModel.MainActivityViewModel
 import org.osmdroid.config.Configuration
 import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.library.BuildConfig
@@ -23,6 +27,8 @@ class MapFragment : Fragment() {
 
     lateinit var binding:FragmentMapBinding
     private var marker: Marker? = null
+    lateinit var mainViewModel: MainActivityViewModel
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
 
     var lat :Double=0.0
@@ -32,13 +38,17 @@ class MapFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        swipeRefreshLayout=requireActivity().findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
+
         binding= FragmentMapBinding.inflate(inflater,container,false)
+        mainViewModel= ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        swipeRefreshLayout.isEnabled = false
 
        // viewModel = ViewModelProvider(this).get(MapViewModel::class.java)
 
@@ -58,6 +68,7 @@ class MapFragment : Fragment() {
                     updateMarkerPosition(it)
                     lat=it.latitude
                     lon=it.longitude
+//                    mainViewModel.updateFavLocation(it)
                  //   viewModel.setSelectedLocation(it) // Update ViewModel
                 }
                 return true
@@ -74,9 +85,16 @@ class MapFragment : Fragment() {
         // Handle "OK" button click
         binding.btnOk.setOnClickListener {
            // val location = viewModel.getSelectedLatLon()
-            if (lat >0 && lon > 0) {
+            // changed from lon > 0 --> lon !=0
+            if (lat != 0.0 && lon != 0.0) {
                // val (lat, lon) = location
+                mainViewModel.updateFavLocation(lat,lon)
+
+
                 Toast.makeText(requireContext(), "Lat: $lat, Lon: $lon", Toast.LENGTH_LONG).show()
+                findNavController().navigate(R.id.action_mapFragment_to_favFragment)
+
+              //  findNavController().popBackStack()
                 // Pass data to another fragment or use as needed
             } else {
                 Toast.makeText(requireContext(), "No location selected", Toast.LENGTH_SHORT).show()
