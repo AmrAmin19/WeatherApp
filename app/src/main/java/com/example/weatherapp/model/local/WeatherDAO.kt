@@ -8,14 +8,15 @@ import androidx.room.Query
 import com.example.weatherapp.model.CurrentWeather
 import com.example.weatherapp.model.CurrentWeatherResponse
 import com.example.weatherapp.model.FavWeather
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WeatherDAO {
     @Query("SELECT * FROM fav_weather")
-    suspend fun getAllLocal(): List<FavWeather>
+     fun getAllLocal(): Flow<List<FavWeather>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(favWeather: FavWeather)
+    suspend fun insert(favWeather: FavWeather):Long
 
     @Delete
     suspend fun delete(favWeather: FavWeather)

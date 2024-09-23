@@ -1,5 +1,6 @@
 package com.example.weatherapp.model
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
@@ -13,6 +14,7 @@ import com.example.weatherapp.model.local.SysConverter
 import com.example.weatherapp.model.local.WeatherConverter
 import com.example.weatherapp.model.local.WindConverter
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
 data class WeatherResponse(
     val cod: String,
@@ -150,9 +152,10 @@ data class CurrentWeather(
 )
 
 @Entity(tableName = "fav_weather")
+@Parcelize
 data class FavWeather(
    @PrimaryKey val name: String,
     val lat: Double,
     val lon: Double
-)
+) : Parcelable
 

@@ -43,11 +43,14 @@
     </fragment>
     <fragment
         android:id="@+id/detailsFragment2"
-        android:name="com.example.weatherapp.DetailsFragment"
+        android:name="com.example.weatherapp.view.favorite.DetailsFragment"
         android:label="@string/favorites"
         tools:layout="@layout/fragment_details" >
         <action
             android:id="@+id/action_detailsFragment2_to_favFragment"
             app:destination="@id/favFragment" />
+        <argument
+            android:name="favWeather"
+            app:argType="com.example.weatherapp.model.FavWeather" />
     </fragment>
 </navigation>

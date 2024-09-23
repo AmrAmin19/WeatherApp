@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.weatherapp.model.CurrentWeather
 import com.example.weatherapp.model.CurrentWeatherResponse
 import com.example.weatherapp.model.FavWeather
+import kotlinx.coroutines.flow.Flow
 
 class LocalData(context : Context) :IlocalData {
 
@@ -12,12 +13,12 @@ class LocalData(context : Context) :IlocalData {
         datbase.getWeatherDao()
     }
 
-    override suspend fun getAllLocal(): List<FavWeather> {
+    override  fun getAllLocal(): Flow<List<FavWeather>> {
        return dao.getAllLocal()
     }
 
-    override suspend fun insert(favWeather: FavWeather) {
-        dao.insert(favWeather)
+    override suspend fun insert(favWeather: FavWeather):Long {
+      return  dao.insert(favWeather)
     }
 
     override suspend fun delete(favWeather: FavWeather) {

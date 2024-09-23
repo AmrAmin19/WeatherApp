@@ -1,19 +1,21 @@
 package com.example.weatherapp.view.favorite
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentFavBinding
+import com.example.weatherapp.model.FavWeather
 import com.example.weatherapp.model.Repo
 import com.example.weatherapp.model.local.LocalData
 import com.example.weatherapp.model.remote.RemoteData
@@ -54,17 +56,25 @@ class FavFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        myAdapter= FavAdapter { favViewModel.delet(it) }
+        swipeRefreshLayout.isEnabled=false
+
+        myAdapter= FavAdapter({showConfirmationDialog(it)},{
+
+          val action =  FavFragmentDirections.actionFavFragmentToDetailsFragment2(it)
+            findNavController().navigate(action)
+
+        })
+
         binding.FavRecycleView.layoutManager= LinearLayoutManager(context)
         binding.FavRecycleView.adapter=myAdapter
 
 
-        mainViewModel.favlocationLiveData.observe(viewLifecycleOwner, Observer {location ->
-            val (lat, lon) = location
-            favViewModel.fetchDataFromApi(lat, lon)
-            swipeRefreshLayout.isEnabled = true
-
-        })
+//        mainViewModel.favlocationLiveData.observe(viewLifecycleOwner, Observer {location ->
+//            val (lat, lon) = location
+//            favViewModel.fetchDataFromApi(lat, lon)
+//            swipeRefreshLayout.isEnabled = true
+//
+//        })
 
 
         binding.fabOpenMap.setOnClickListener {
@@ -79,5 +89,19 @@ class FavFragment : Fragment() {
     }
 
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d("TAG", "onDestroyView: ")
+        swipeRefreshLayout.isEnabled = true
+    }
+
+    private fun showConfirmationDialog(favWeather: FavWeather) {
+        AlertDialog.Builder(context)
+            .setTitle("Delete")
+            .setMessage("Are you sure you want to delete?")
+            .setPositiveButton("OK") { _, _ ->  favViewModel.delet(favWeather) }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
 
 }

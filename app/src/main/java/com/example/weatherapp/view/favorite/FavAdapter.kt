@@ -1,9 +1,11 @@
 package com.example.weatherapp.view.favorite
 
+import android.app.AlertDialog
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -21,7 +23,8 @@ class FavDiff:DiffUtil.ItemCallback<FavWeather>(){
 }
 
 class FavAdapter (
-    var myListenner:(FavWeather)->Unit
+    var myListenner:(FavWeather)->Unit,
+    var myListennerArgs: (FavWeather) -> Unit
 ) :ListAdapter<FavWeather,FavAdapter.FavViewHolder>(FavDiff())
 {
     lateinit var binding:FavItemBinding
@@ -38,6 +41,7 @@ class FavAdapter (
         holder.binding.cityName.text=currentWeather.name
 
         holder.binding.favItemCard.setOnClickListener {
+            myListennerArgs.invoke(currentWeather)
 
             Log.d("AmrAdapter", "card clicked ")
         }
@@ -47,4 +51,6 @@ class FavAdapter (
         }
 
     }
+
+
 }

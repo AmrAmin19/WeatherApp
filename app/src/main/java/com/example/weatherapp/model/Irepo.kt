@@ -1,5 +1,7 @@
 package com.example.weatherapp.model
 
+import kotlinx.coroutines.flow.Flow
+
 interface Irepo {
     // Remote
     suspend fun getCurrentWeather(lat: Double,lon: Double) : CurrentWeatherResponse
@@ -9,8 +11,8 @@ interface Irepo {
 
     // Local
 
-    suspend fun getAllLocal(): List<FavWeather>
-    suspend fun insert(favWeather: FavWeather)
+    fun getAllLocal(): Flow<List<FavWeather>>
+    suspend fun insert(favWeather: FavWeather):Long
     suspend fun delete(favWeather: FavWeather)
 
 //    fun getCurrentWeatherLocal(weatherResponse: WeatherResponse,currentWeatherResponse: CurrentWeatherResponse):CurrentWeather

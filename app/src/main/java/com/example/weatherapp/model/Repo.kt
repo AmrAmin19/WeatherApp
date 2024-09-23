@@ -2,6 +2,7 @@ package com.example.weatherapp.model
 
 import com.example.weatherapp.model.local.IlocalData
 import com.example.weatherapp.model.remote.IremoteData
+import kotlinx.coroutines.flow.Flow
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -84,12 +85,12 @@ class Repo private constructor(
         return favWeather
     }
 
-    override suspend fun getAllLocal(): List<FavWeather> {
+    override  fun getAllLocal(): Flow<List<FavWeather>> {
       return  localData.getAllLocal()
     }
 
-    override suspend fun insert(favWeather: FavWeather) {
-       localData.insert(favWeather)
+    override suspend fun insert(favWeather: FavWeather) :Long{
+     return  localData.insert(favWeather)
     }
 
     override suspend fun delete(favWeather: FavWeather) {

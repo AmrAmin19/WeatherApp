@@ -1,8 +1,5 @@
-package com.example.weatherapp.view.home
+package com.example.weatherapp.view.favorite
 
-
-
-import com.example.weatherapp.model.local.LocalData
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,88 +8,69 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.weatherapp.R
-import com.example.weatherapp.databinding.FragmentHomeBinding
+import com.example.weatherapp.databinding.FragmentDetailsBinding
+import com.example.weatherapp.model.FavWeather
 import com.example.weatherapp.model.Repo
+import com.example.weatherapp.model.local.LocalData
 import com.example.weatherapp.model.remote.RemoteData
-import com.example.weatherapp.viewModel.HomeFactory
-import com.example.weatherapp.viewModel.HomeViewModel
-import com.example.weatherapp.viewModel.MainActivityViewModel
+import com.example.weatherapp.view.home.DailyForcastAdapter
+import com.example.weatherapp.view.home.HourlyForcastAdabter
+import com.example.weatherapp.viewModel.DetailsFactory
+import com.example.weatherapp.viewModel.DetailsViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
+class DetailsFragment : Fragment() {
+    lateinit var binding: FragmentDetailsBinding
+    lateinit var factory:DetailsFactory
+    lateinit var viewModel: DetailsViewModel
 
-class HomeFragment : Fragment() {
-
-
-
-    lateinit var binding:FragmentHomeBinding
-    lateinit var homeViewModel:HomeViewModel
-    lateinit var factory: HomeFactory
-    lateinit var mainViewModel:MainActivityViewModel
-    lateinit var myAdapter: DailyForcastAdapter
+    lateinit var dayAdapter: DailyForcastAdapter
     lateinit var hourAdabter: HourlyForcastAdabter
-  //  private lateinit var fusedLocationClient: FusedLocationProviderClient
-
-    private var latOld: Double = 0.0
-    private var lonOld: Double = 0.0
-
-
+//    lateinit var   favWeather :FavWeather
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        factory=HomeFactory(Repo.getInstance(RemoteData(), LocalData(requireContext())))
-        homeViewModel=ViewModelProvider(this,factory).get(HomeViewModel::class.java)
-
-        mainViewModel=ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)
-
-        binding=FragmentHomeBinding.inflate(inflater,container,false)
-
-     //   fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-
-       // startLocationUpdates()
-
-        Log.d("AmrFragment", "onCreateView: ")
-
-
-
+        // Inflate the layout for this fragment
+        binding=FragmentDetailsBinding.inflate(inflater,container,false)
+        factory=DetailsFactory(Repo.getInstance(RemoteData(), LocalData(requireContext())))
+        viewModel=ViewModelProvider(this,factory).get(DetailsViewModel::class.java)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d("AmrFragment", "onViewCreated: ")
 
-        showLoading(true)
+        val args: DetailsFragmentArgs by navArgs()  // Retrieve the arguments
+       val favWeather = args.favWeather
+
+        viewModel.fetchCurrentWeather(favWeather.lat,favWeather.lon)
+        viewModel.fetchForecastWeather(favWeather.lat,favWeather.lon)
+
+        binding.locationText.text=favWeather.name
 
 
-        myAdapter= DailyForcastAdapter()
+        dayAdapter= DailyForcastAdapter()
         hourAdabter= HourlyForcastAdabter()
 
         binding.forecastRecyclerView.layoutManager= LinearLayoutManager(context)
-        binding.forecastRecyclerView.adapter=myAdapter
+        binding.forecastRecyclerView.adapter=dayAdapter
 
-        binding.recycleHourView.layoutManager=LinearLayoutManager(context,RecyclerView.HORIZONTAL,false)
+        binding.recycleHourView.layoutManager= LinearLayoutManager(context, RecyclerView.HORIZONTAL,false)
         binding.recycleHourView.adapter=hourAdabter
 
 
-       mainViewModel.locationLiveData.observe(viewLifecycleOwner, Observer {
-
-               //  showLoading(true)
-               fetchWeatherData(it.latitude,it.longitude)
-
-       })
-
-
-        homeViewModel.currentWeather.observe(viewLifecycleOwner, Observer {
+        viewModel.currentWeather.observe(viewLifecycleOwner, Observer {
 
             showLoading(false)
 
@@ -118,24 +96,15 @@ class HomeFragment : Fragment() {
 
         })
 
-        homeViewModel.forecastWeather.observe(viewLifecycleOwner, Observer {
+        viewModel.dailyForecast.observe(viewLifecycleOwner, Observer {
 
             showLoading(false)
 
-
-            binding.locationText.text=it.city.name
-
-        })
-
-        homeViewModel.dailyForecast.observe(viewLifecycleOwner, Observer {
-
-            showLoading(false)
-
-            myAdapter.submitList(it)
+            dayAdapter.submitList(it)
 
         })
 
-        homeViewModel.hourlyForecast.observe(viewLifecycleOwner, Observer {
+        viewModel.hourlyForecast.observe(viewLifecycleOwner, Observer {
 
             Log.d("AmrDataTes", "${it.size}  ")
 
@@ -145,11 +114,10 @@ class HomeFragment : Fragment() {
     }
 
 
-
     fun convertTimestampToDate(timestamp: Long): String {
         val date = Date(timestamp * 1000) // Convert seconds to milliseconds
         val sdf = SimpleDateFormat("MMMM dd", Locale.getDefault()) // Format to Month name and day number
-        sdf.timeZone=TimeZone.getDefault()
+        sdf.timeZone= TimeZone.getDefault()
         return sdf.format(date)
     }
 
@@ -158,40 +126,23 @@ class HomeFragment : Fragment() {
         val sdf = SimpleDateFormat("HH:mm", Locale.getDefault()) // Format to hours and minutes only
 //        val tz = TimeZone.getTimeZone("GMT${if (timeZone >= 0) "+" else ""}$timeZone")
 //        sdf.timeZone = tz
-        sdf.timeZone=TimeZone.getDefault()
+        sdf.timeZone= TimeZone.getDefault()
         return sdf.format(date)
     }
 
-    private fun fetchWeatherData(lat: Double, lon: Double) {
-        // Check if the latitude and longitude have changed
-        if (latOld == lat && lonOld == lon) {
-            // If they haven't changed, return early
-            return
-        }
-
-        // Update the old latitude and longitude with new values
-        latOld = lat
-        lonOld = lon
-
-        // Fetch the new weather data
-        homeViewModel.fetchCurrentWeather(lat, lon)
-        homeViewModel.fetchForecastWeather(lat, lon)
-    }
-
-
     private fun showLoading(isLoading: Boolean) {
-       // binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        // binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
 
         if (isLoading)
         {
 
-         //   binding.swipeRefreshLayout.isRefreshing = true
+            //   binding.swipeRefreshLayout.isRefreshing = true
             binding.progressBar.visibility=View.VISIBLE
         }
         else
         {
             binding.progressBar.visibility=View.GONE
-           // binding.swipeRefreshLayout.isRefreshing = false
+            // binding.swipeRefreshLayout.isRefreshing = false
 
             binding.huadityIcon.visibility=View.VISIBLE
             binding.humadityText.visibility=View.VISIBLE
@@ -206,4 +157,3 @@ class HomeFragment : Fragment() {
 
 
 }
-

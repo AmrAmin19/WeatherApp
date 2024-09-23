@@ -1,35 +1,21 @@
 package com.example.weatherapp.viewModel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weatherapp.model.CurrentWeather
-import com.example.weatherapp.model.FavWeather
 import com.example.weatherapp.model.Irepo
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-class FavViewModel(val repo:Irepo):ViewModel() {
-    private val _favWeather=MutableLiveData<List<FavWeather>>()
-    val favWeather :LiveData<List<FavWeather>>
-        get() = _favWeather
-//
-//    private val _currentWeather=MutableLiveData<CurrentWeather>()
-//    val currentWeather :LiveData<CurrentWeather>
-//        get() = _currentWeather
+class MapViewModel(var repo:Irepo):ViewModel() {
+
+    private val _resultInsert=MutableLiveData<Long>()
+     val resultInsert:LiveData<Long> = _resultInsert
 
 
-    init {
-        getFavWeather()
-    }
 
     fun fetchDataFromApi(lat:Double,lon:Double)
     {
-
-
-
         viewModelScope.launch {
 
 //            try {
@@ -61,8 +47,9 @@ class FavViewModel(val repo:Irepo):ViewModel() {
             val temp = repo.getFavWeather(weatherResponse)
 
             //testing the idea
-            repo.insert(temp)
-            getFavWeather()
+          val result=  repo.insert(temp)
+            _resultInsert.postValue(result)
+
 //
 //            _currentWeather.postValue(temp)
 
@@ -70,30 +57,6 @@ class FavViewModel(val repo:Irepo):ViewModel() {
 
     }
 
-    fun getFavWeather()
-    {
-        viewModelScope.launch {
-            repo.getAllLocal().collect{
-                _favWeather.value=it
-            }
-//          val temp= repo.getAllLocal().
-//            _favWeather.postValue(temp)
-        }
-    }
 
-    fun insert(favWeather: FavWeather)
-    {
-        viewModelScope.launch {
-            repo.insert(favWeather)
-        }
-    }
 
-    fun delet(favWeather: FavWeather)
-    {
-        viewModelScope.launch {
-            repo.delete(favWeather)
-           // getFavWeather()
-        }
-
-    }
 }
