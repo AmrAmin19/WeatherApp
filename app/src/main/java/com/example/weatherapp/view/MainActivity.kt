@@ -19,6 +19,7 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.ActivityMainBinding
 import com.example.weatherapp.viewModel.MainActivityViewModel
@@ -29,14 +30,18 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),Communicator {
 
     lateinit var binding: ActivityMainBinding
    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var viewModel: MainActivityViewModel
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
 
         binding=ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -71,10 +76,10 @@ class MainActivity : AppCompatActivity() {
             actionBar?.title = destination.label
         }
 
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            getFreshLocation()
-         //   startLocationUpdates()
-        }
+//        binding.swipeRefreshLayout.setOnRefreshListener {
+//            getFreshLocation()
+//         //   startLocationUpdates()
+//        }
 
     }
 
@@ -158,7 +163,7 @@ class MainActivity : AppCompatActivity() {
     // testing location
 
     @SuppressLint("MissingPermission")
-    fun getFreshLocation()
+   override fun getFreshLocation()
     {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         fusedLocationClient.requestLocationUpdates( LocationRequest.Builder(5000).apply {
@@ -173,13 +178,18 @@ class MainActivity : AppCompatActivity() {
                         viewModel.updateLocation(location)  // Pass location to ViewModel
                         fusedLocationClient.removeLocationUpdates(this)
 
-                        binding.swipeRefreshLayout.isRefreshing = false
+
+
+
+                      //  swipeRefreshLayout.isRefreshing = false
                     }
                 }
             },
             Looper.myLooper()
         )
     }
+
+
 
     fun checkPermission():Boolean
     {

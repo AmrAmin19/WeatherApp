@@ -33,7 +33,7 @@ class FavFragment : Fragment() {
 
     lateinit var myAdapter: FavAdapter
 
-    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+   // private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +46,7 @@ class FavFragment : Fragment() {
 
         mainViewModel= ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)
 
-         swipeRefreshLayout=requireActivity().findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
+       //  swipeRefreshLayout=requireActivity().findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
 
         binding=FragmentFavBinding.inflate(inflater,container,false)
         return binding.root
@@ -56,7 +56,7 @@ class FavFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        swipeRefreshLayout.isEnabled=false
+       // swipeRefreshLayout.isEnabled=false
 
         myAdapter= FavAdapter({showConfirmationDialog(it)},{
 
@@ -92,7 +92,7 @@ class FavFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         Log.d("TAG", "onDestroyView: ")
-        swipeRefreshLayout.isEnabled = true
+      //  swipeRefreshLayout.isEnabled = true
     }
 
     private fun showConfirmationDialog(favWeather: FavWeather) {

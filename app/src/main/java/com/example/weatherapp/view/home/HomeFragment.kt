@@ -18,6 +18,7 @@ import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentHomeBinding
 import com.example.weatherapp.model.Repo
 import com.example.weatherapp.model.remote.RemoteData
+import com.example.weatherapp.view.Communicator
 import com.example.weatherapp.viewModel.HomeFactory
 import com.example.weatherapp.viewModel.HomeViewModel
 import com.example.weatherapp.viewModel.MainActivityViewModel
@@ -30,6 +31,10 @@ import java.util.TimeZone
 class HomeFragment : Fragment() {
 
 
+
+    val communicator by lazy {
+        requireActivity() as Communicator
+    }
 
     lateinit var binding:FragmentHomeBinding
     lateinit var homeViewModel:HomeViewModel
@@ -69,6 +74,8 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
         Log.d("AmrFragment", "onViewCreated: ")
 
         showLoading(true)
@@ -87,7 +94,10 @@ class HomeFragment : Fragment() {
        mainViewModel.locationLiveData.observe(viewLifecycleOwner, Observer {
 
                //  showLoading(true)
+//           binding.swipeRefreshLayout.isEnabled=false
                fetchWeatherData(it.latitude,it.longitude)
+           // to stop refresh
+           binding.swipeRefreshLayout.isRefreshing = false
 
        })
 
@@ -95,6 +105,7 @@ class HomeFragment : Fragment() {
         homeViewModel.currentWeather.observe(viewLifecycleOwner, Observer {
 
             showLoading(false)
+
 
 
             binding.updatedTime.text=getString(R.string.timeupdate,convertTimestampToTime(it.dt))
@@ -141,6 +152,10 @@ class HomeFragment : Fragment() {
 
             hourAdabter.submitList(it)
         })
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            communicator.getFreshLocation()
+        }
 
     }
 

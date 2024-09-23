@@ -38,7 +38,8 @@ class MapFragment : Fragment() {
     lateinit var mainViewModel: MainActivityViewModel
     lateinit var viewmodel:MapViewModel
     lateinit var factory: MapFactory
-    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+   // private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+
 
 
     var lat :Double=0.0
@@ -48,7 +49,7 @@ class MapFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        swipeRefreshLayout=requireActivity().findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
+        //swipeRefreshLayout=requireActivity().findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
 
 
         factory= MapFactory(Repo.getInstance(RemoteData(), LocalData(requireContext())))
@@ -152,14 +153,14 @@ class MapFragment : Fragment() {
         super.onResume()
         binding.map.onResume()
         Log.d("TAG", "onResume: ")
-        swipeRefreshLayout.isEnabled = false
+       // swipeRefreshLayout.isEnabled = false
 
     }
 
     override fun onPause() {
         super.onPause()
         binding.map.onPause()
-        swipeRefreshLayout.isEnabled = true
+        //swipeRefreshLayout.isEnabled = true
     }
 
 
