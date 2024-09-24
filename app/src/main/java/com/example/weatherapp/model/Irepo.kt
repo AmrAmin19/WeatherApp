@@ -9,6 +9,8 @@ interface Irepo {
     fun getDailyForecasts(weatherResponse: WeatherResponse): List<DailyForecast>
     fun getHourlyForecastForToday(weatherResponse: WeatherResponse): List<HourlyForecast>
 
+    fun getLocationByName(name: String): Flow<LocationResponce>
+
     // Local
 
     fun getAllLocal(): Flow<List<FavWeather>>

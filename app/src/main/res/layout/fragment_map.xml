@@ -1,20 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto">-->
+
+<!--&lt;!&ndash;    <LinearLayout&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_height="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:orientation="vertical">&ndash;&gt;-->
+
+
+
+<!--        <org.osmdroid.views.MapView-->
+<!--            android:id="@+id/map"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="1" />-->
+
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/btnOk"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="16dp"-->
+<!--        android:contentDescription="@string/date"-->
+<!--        android:src="@drawable/baseline_favorite_24"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent" />-->
+
+<!--&lt;!&ndash;        <Button&ndash;&gt;-->
+<!--&lt;!&ndash;            android:id="@+id/btn_ok"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_gravity="center"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:text="OK" />&ndash;&gt;-->
+<!--&lt;!&ndash;    </LinearLayout>&ndash;&gt;-->
+
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:orientation="vertical">-->
+    <!-- MapView takes the entire screen -->
 
-        <org.osmdroid.views.MapView
-            android:id="@+id/map"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
 
+    <org.osmdroid.views.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/rounded_search"
+        android:queryHint="Search location"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/white"
+        android:elevation="4dp"
+        android:maxHeight="300dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchView" />
+
+    <!--    <androidx.recyclerview.widget.RecyclerView-->
+    <!--        android:id="@+id/recyclerView"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:background="@color/white"-->
+    <!--        android:paddingStart="16dp"-->
+    <!--        android:paddingEnd="16dp"-->
+    <!--        android:visibility="gone"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/searchView"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"/>-->
+
+
+    <!--    <androidx.recyclerview.widget.RecyclerView-->
+    <!--        android:id="@+id/recyclerView"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:background="@color/white"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/searchView"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        android:visibility="gone" />-->
+
+    <!-- FloatingActionButton overlayed on top of the map -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnOk"
         android:layout_width="wrap_content"
@@ -25,13 +119,57 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-<!--        <Button-->
-<!--            android:id="@+id/btn_ok"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:text="OK" />-->
-<!--    </LinearLayout>-->
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+<!--<androidx.constraintlayout.widget.ConstraintLayout-->
+<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent">-->
+
+<!--&lt;!&ndash; SearchView at the top &ndash;&gt;-->
+<!--<androidx.appcompat.widget.SearchView-->
+<!--    android:id="@+id/searchView"-->
+<!--    android:layout_width="0dp"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:queryHint="Search location"-->
+<!--    app:layout_constraintTop_toTopOf="parent"-->
+<!--    app:layout_constraintStart_toStartOf="parent"-->
+<!--    app:layout_constraintEnd_toEndOf="parent"-->
+<!--    android:layout_margin="16dp" />-->
+
+<!--&lt;!&ndash; RecyclerView for search results &ndash;&gt;-->
+<!--<androidx.recyclerview.widget.RecyclerView-->
+<!--    android:id="@+id/recyclerView"-->
+<!--    android:layout_width="0dp"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:paddingStart="16dp"-->
+<!--    android:paddingEnd="16dp"-->
+<!--    android:visibility="gone" &lt;!&ndash; Initially hidden &ndash;&gt;-->
+<!--app:layout_constraintTop_toBottomOf="@id/searchView"-->
+<!--app:layout_constraintStart_toStartOf="parent"-->
+<!--app:layout_constraintEnd_toEndOf="parent" />-->
+
+<!--&lt;!&ndash; MapView &ndash;&gt;-->
+<!--<org.osmdroid.views.MapView-->
+<!--    android:id="@+id/map"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="0dp"-->
+<!--    app:layout_constraintTop_toBottomOf="@id/recyclerView"-->
+<!--    app:layout_constraintBottom_toTopOf="@id/btnOk"-->
+<!--    app:layout_constraintStart_toStartOf="parent"-->
+<!--    app:layout_constraintEnd_toEndOf="parent" />-->
+
+<!--&lt;!&ndash; FloatingActionButton &ndash;&gt;-->
+<!--<com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--    android:id="@+id/btnOk"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_margin="16dp"-->
+<!--    android:contentDescription="@string/date"-->
+<!--    android:src="@drawable/baseline_favorite_24"-->
+<!--    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--    app:layout_constraintEnd_toEndOf="parent" />-->
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->

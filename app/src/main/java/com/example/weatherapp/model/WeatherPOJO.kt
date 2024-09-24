@@ -159,3 +159,9 @@ data class FavWeather(
     val lon: Double
 ) : Parcelable
 
+data class LocationResponce (
+    val name:String,
+    val lat:Double,
+    val lon:Double
+)
+

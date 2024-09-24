@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="city_list">
+        <item>Cairo</item>
+        <item>Alexandria</item>
+        <item>Giza</item>
+        <item>Shubra El-Kheima</item>
+        <item>Port Said</item>
+        <item>Suez</item>
+        <item>Luxor</item>
+        <item>Asyut</item>
+        <item>Mansoura</item>
+        <item>Tanta</item>
+        <item>Ismailia</item>
+        <item>Faiyum</item>
+        <item>Zagazig</item>
+        <item>Damietta</item>
+        <item>Aswan</item>
+        <item>Minya</item>
+        <item>Beni Suef</item>
+        <item>Qena</item>
+        <item>Sohag</item>
+        <item>Hurghada</item>
+        <item>New York</item>
+        <item>Los Angeles</item>
+        <item>London</item>
+        <item>Paris</item>
+        <item>Tokyo</item>
+        <item>Berlin</item>
+        <item>Moscow</item>
+        <item>Sydney</item>
+        <item>Toronto</item>
+        <item>Rome</item>
+        <item>Mumbai</item>
+        <item>Beijing</item>
+        <item>Dubai</item>
+        <item>Mexico City</item>
+        <item>Bangkok</item>
+        <item>Buenos Aires</item>
+        <item>Istanbul</item>
+        <item>Seoul</item>
+        <item>Sao Paulo</item>
+        <item>Jakarta</item>
+        <item>Cape Town</item>
+        <item>Madrid</item>
+        <item>Vienna</item>
+        <item>Barcelona</item>
+        <item>Athens</item>
+        <item>Lisbon</item>
+        <item>Prague</item>
+        <item>Warsaw</item>
+        <item>Amsterdam</item>
+        <item>Brussels</item>
+        <item>Hong Kong</item>
+        <item>Shanghai</item>
+        <item>Kuala Lumpur</item>
+        <item>Singapore</item>
+        <item>Lagos</item>
+        <item>Dublin</item>
+        <item>Copenhagen</item>
+        <item>Stockholm</item>
+        <item>Helsinki</item>
+        <item>Oslo</item>
+        <item>Vancouver</item>
+        <item>Melbourne</item>
+        <item>Zurich</item>
+        <item>Geneva</item>
+        <item>Edinburgh</item>
+        <item>Brisbane</item>
+        <item>Kolkata</item>
+        <item>Karachi</item>
+        <item>Riyadh</item>
+        <item>Tel Aviv</item>
+        <item>Casablanca</item>
+        <item>Manila</item>
+        <item>Lima</item>
+        <item>Havana</item>
+        <item>Kyiv</item>
+        <item>Nairobi</item>
+        <item>Hanoi</item>
+        <item>Vienna</item> <!-- Duplicate, you may want to remove one -->
+        <item>Budapest</item>
+        <item>Munich</item>
+        <item>Venice</item>
+        <item>Florence</item>
+        <item>Salvador</item>
+        <item>Rio de Janeiro</item>
+        <item>Lyon</item>
+        <item>Marseille</item>
+        <item>Krakow</item>
+        <item>Copenhagen</item> <!-- Duplicate, you may want to remove one -->
+        <item>Montreal</item>
+        <item>Osaka</item>
+        <item>Bucharest</item>
+        <item>Belgrade</item>
+        <item>Sofia</item>
+        <item>Ankara</item>
+        <item>Tbilisi</item>
+    </string-array>
+</resources>

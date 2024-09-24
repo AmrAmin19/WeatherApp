@@ -1,8 +1,10 @@
 package com.example.weatherapp.model
 
+import android.util.Log
 import com.example.weatherapp.model.local.IlocalData
 import com.example.weatherapp.model.remote.IremoteData
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -47,6 +49,21 @@ class Repo private constructor(
    override fun getHourlyForecastForToday(weatherResponse: WeatherResponse): List<HourlyForecast>
     {
         return remoteData.getHourlyForecastForToday(weatherResponse)
+    }
+
+   override fun getLocationByName(name: String): Flow<LocationResponce> = flow {
+        try {
+            // Call the suspend function to get the list
+            val locationList = remoteData.getLocationByName(name) // This should refer to your suspend function
+
+            // Emit the list of locations
+            emit(locationList.first())
+        } catch (e: Exception) {
+            // Handle error
+            Log.e("API Error", "Error fetching location data: ${e.message}")
+            // Optionally, emit an empty list or handle the error appropriately
+            emit(LocationResponce(" ${e.message}",0.0,0.0))
+        }
     }
 
 

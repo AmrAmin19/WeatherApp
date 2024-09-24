@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.weatherapp.model.CurrentWeatherResponse
 import com.example.weatherapp.model.DailyForecast
 import com.example.weatherapp.model.HourlyForecast
+import com.example.weatherapp.model.LocationResponce
 import com.example.weatherapp.model.WeatherInfo
 import com.example.weatherapp.model.WeatherResponse
 import java.text.SimpleDateFormat
@@ -25,6 +26,11 @@ class RemoteData :IremoteData {
         Log.d("AmrTestCalls", "getForecastWeather: ")
         return  services.getWeatherForecast(lat = lat,
             lon = lon)
+    }
+
+    override suspend fun getLocationByName (name:String) : List<LocationResponce>
+    {
+        return services.getLocationByName(name)
     }
 
 
