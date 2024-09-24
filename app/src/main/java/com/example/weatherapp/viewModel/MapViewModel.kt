@@ -22,13 +22,9 @@ class MapViewModel(var repo:Irepo):ViewModel() {
         get() = _cityLocation
 
 
-
-
-
-    //--------------------------------------
-
     private val _filteredCities = MutableLiveData<List<String>>()
     val filteredCities: LiveData<List<String>> = _filteredCities
+
 
     private val cityList = arrayListOf(
         "Cairo", "Alexandria", "Giza", "Shubra El-Kheima", "Port Said",
@@ -81,8 +77,6 @@ class MapViewModel(var repo:Irepo):ViewModel() {
 
 
 
-    //-------------------------
-
 
 
     fun fetchDataFromApi(lat:Double,lon:Double)
@@ -112,17 +106,14 @@ class MapViewModel(var repo:Irepo):ViewModel() {
 //                // Optionally, post a fallback value or notify the UI of the error
 //            }
 
-//            val currentWeatherResponse=repo.getCurrentWeather(lat,lon)
             val weatherResponse= repo.getForecastWeather(lat,lon)
 
             val temp = repo.getFavWeather(weatherResponse)
 
-            //testing the idea
+
           val result=  repo.insert(temp)
             _resultInsert.postValue(result)
 
-//
-//            _currentWeather.postValue(temp)
 
         }
 
@@ -130,9 +121,6 @@ class MapViewModel(var repo:Irepo):ViewModel() {
 
     fun getLocation(name:String)
     {
-
-
-
         viewModelScope.launch {
             repo.getLocationByName(name).collect{
                 _cityLocation.value=it
