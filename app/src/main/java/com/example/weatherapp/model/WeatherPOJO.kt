@@ -159,6 +159,12 @@ data class FavWeather(
     val lon: Double
 ) : Parcelable
 
+@Entity(tableName = "alarm_table")
+data class AlarmData(
+   @PrimaryKey val requestCode :Int,
+    val time:Long
+)
+
 data class LocationResponce (
     val name:String,
     val lat:Double,

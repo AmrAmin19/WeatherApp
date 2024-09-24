@@ -17,6 +17,15 @@ interface Irepo {
     suspend fun insert(favWeather: FavWeather):Long
     suspend fun delete(favWeather: FavWeather)
 
+
+    // Alarm
+    fun getAllLocalAlarm() : Flow<List<AlarmData>>
+    suspend fun insertAlarmData(alarmData: AlarmData)
+    suspend fun deletAlarm(alarmData: AlarmData)
+
+    suspend fun deleteOldAlarms(currentTimeMillis: Long)
+
+
 //    fun getCurrentWeatherLocal(weatherResponse: WeatherResponse,currentWeatherResponse: CurrentWeatherResponse):CurrentWeather
 fun getFavWeather(weatherResponse: WeatherResponse):FavWeather
 }

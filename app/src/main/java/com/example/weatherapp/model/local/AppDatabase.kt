@@ -6,11 +6,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.example.weatherapp.model.AlarmData
 import com.example.weatherapp.model.CurrentWeather
 import com.example.weatherapp.model.CurrentWeatherResponse
 import com.example.weatherapp.model.FavWeather
 
-@Database(entities = [FavWeather::class], version = 1)
+@Database(entities = [FavWeather::class,AlarmData::class], version = 1)
 //@TypeConverters(HourlyForecastConverter::class, DailyForecastConverter::class)
 abstract class AppDatabase:RoomDatabase() {
     abstract fun getWeatherDao() : WeatherDAO

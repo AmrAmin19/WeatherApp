@@ -114,4 +114,23 @@ class Repo private constructor(
        localData.delete(favWeather)
     }
 
+
+
+    override fun getAllLocalAlarm(): Flow<List<AlarmData>> {
+        return localData.getAllLocalAlarm()
+    }
+
+    override suspend fun insertAlarmData(alarmData: AlarmData) {
+        localData.insertAlarmData(alarmData)
+    }
+
+    override suspend fun deletAlarm(alarmData: AlarmData) {
+         localData.deletAlarm(alarmData)
+    }
+
+    override suspend fun deleteOldAlarms(currentTimeMillis: Long) {
+      localData.deleteOldAlarms(currentTimeMillis)
+    }
+
+
 }

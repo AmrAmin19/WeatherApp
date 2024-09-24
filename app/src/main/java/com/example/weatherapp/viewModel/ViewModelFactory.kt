@@ -46,3 +46,14 @@ class MapFactory(private val repo: Irepo): ViewModelProvider.Factory
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
+
+class AlertFactory(private val repo: Irepo): ViewModelProvider.Factory
+{
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(AlertViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return AlertViewModel(repo) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
