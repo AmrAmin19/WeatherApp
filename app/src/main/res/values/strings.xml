@@ -22,8 +22,8 @@
     <string name="feels_like">FEELS LIKE</string>
     <string name="minMaxTemp">%1$d - %2$d</string>
     <string name="stop">Stop</string>
-    <string name="go_to_weather">Go To Weather</string>
-    <string name="check_weather">check weather</string>
+    <string name="go_to_weather">Weather</string>
+    <string name="check_weather">Check The Weather</string>
     <string name="alarm">Alarm</string>
     <string name="time">Time</string>
 

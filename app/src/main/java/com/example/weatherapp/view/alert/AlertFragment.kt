@@ -49,9 +49,9 @@ class AlertFragment : Fragment() {
     lateinit var viewModel:AlertViewModel
     lateinit var myAdapter:AlarmAdapter
 
-    private val sharedPreferencesName = "alert_preferences"
-    private val requestCodeKey = "request_code"
-    var requestCode: Int = 0
+        private val sharedPreferencesName = "alert_preferences"
+        private val requestCodeKey = "request_code"
+        var requestCode: Int = 0
 
     private val notificationChannelId = "channel_id"
 
@@ -243,19 +243,20 @@ class AlertFragment : Fragment() {
 
 
     private fun showNotification(calendar: Calendar) {
+        val notificationRequest = getRequestCodeFromPreferences()
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(requireContext(), AlarmReceiver::class.java)
 
         // Pass notification type and scheduled time to the receiver
 //        intent.putExtra("ALERT_TYPE", "NOTIFICATION")
-//        intent.putExtra("SCHEDULED_TIME", calendar.timeInMillis)
+        intent.putExtra("notification", notificationRequest)
 
         intent.action="Notification.Action"
 
         // Create a PendingIntent for the AlarmReceiver
         val pendingIntent = PendingIntent.getBroadcast(
             requireContext(),
-            getRequestCodeFromPreferences(),
+            notificationRequest,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )

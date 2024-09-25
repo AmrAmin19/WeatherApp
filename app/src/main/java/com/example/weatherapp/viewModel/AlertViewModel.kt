@@ -19,6 +19,7 @@ class AlertViewModel(val repo :Irepo) :ViewModel() {
         get() = _alarms
 
 //    private val _alarms= MutableLiveData<List<AlarmData>>()
+
 //    val alarms : LiveData<List<AlarmData>>
 //        get() = _alarms
 

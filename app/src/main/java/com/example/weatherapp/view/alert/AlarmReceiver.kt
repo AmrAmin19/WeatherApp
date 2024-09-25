@@ -22,6 +22,8 @@ class AlarmReceiver : BroadcastReceiver() {
 //        val scheduledTime = intent?.getLongExtra("SCHEDULED_TIME", -1L) ?: -1L
 //
 //        val alertType = intent?.getStringExtra("ALERT_TYPE") ?: "ALARM"
+        val notificationRequest = intent?.getIntExtra("notification",0)
+
 
         // Check if the current time has reached or passed the scheduled time
 //        if (scheduledTime != -1L && System.currentTimeMillis() >= scheduledTime) {
@@ -34,7 +36,7 @@ class AlarmReceiver : BroadcastReceiver() {
                 }
                 "Notification.Action" -> {
                     // Show a notification for the scheduled time
-                    showNotification(context)
+                    showNotification(context,notificationRequest?:0)
                     Log.d("AlarmReceiver", "Notification Triggered")
                 }
                 else -> Log.d("AlarmReceiver", "Alarm or Notification is not yet due:")
@@ -45,7 +47,7 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun showNotification(context: Context?) {
+    private fun showNotification(context: Context?, notificationRequest:Int) {
         val notificationManager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         val intent = Intent(context, MainActivity::class.java)
