@@ -57,3 +57,13 @@ class AlertFactory(private val repo: Irepo): ViewModelProvider.Factory
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
+class SettingsFactory(private val repo: Irepo): ViewModelProvider.Factory
+{
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(SettingsViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return SettingsViewModel(repo) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}

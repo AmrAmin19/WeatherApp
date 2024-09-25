@@ -2,6 +2,8 @@ package com.example.weatherapp.model
 
 import android.util.Log
 import com.example.weatherapp.model.local.IlocalData
+import com.example.weatherapp.model.local.IsharedPrefs
+import com.example.weatherapp.model.local.SharedPreferences
 import com.example.weatherapp.model.remote.IremoteData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -11,18 +13,19 @@ import java.util.Locale
 
 class Repo private constructor(
     private var remoteData : IremoteData,
-    private var localData : IlocalData
+    private var localData : IlocalData,
+    private var sharedPreferences: IsharedPrefs
 ):Irepo
 {
     companion object
     {
         private var instance : Repo? = null
 
-        fun getInstance( remoteData : IremoteData,localData: IlocalData):Repo
+        fun getInstance( remoteData : IremoteData,localData: IlocalData,sharedPreferences: IsharedPrefs):Repo
         {
             return instance ?: synchronized(this)
             {
-                val temp = Repo(remoteData,localData)
+                val temp = Repo(remoteData,localData,sharedPreferences)
                 instance=temp
                 temp
             }
@@ -131,6 +134,18 @@ class Repo private constructor(
 
     override suspend fun deleteOldAlarms(currentTimeMillis: Long) {
       localData.deleteOldAlarms(currentTimeMillis)
+    }
+
+
+    //Shared Preferences
+
+    override fun AddsettingsPrefs(key:String,value:String)
+    {
+        sharedPreferences.AddsettingsPrefs(key,value)
+    }
+    override fun getSettingsPrefs(key:String,Default:String):String
+    {
+        return sharedPreferences.getSettingsPrefs(key, Default)
     }
 
 

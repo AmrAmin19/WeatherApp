@@ -27,5 +27,10 @@ interface Irepo {
 
 
 //    fun getCurrentWeatherLocal(weatherResponse: WeatherResponse,currentWeatherResponse: CurrentWeatherResponse):CurrentWeather
-fun getFavWeather(weatherResponse: WeatherResponse):FavWeather
+    fun getFavWeather(weatherResponse: WeatherResponse):FavWeather
+
+//local
+    fun AddsettingsPrefs(key:String,value:String)
+
+    fun getSettingsPrefs(key:String,default:String):String
 }

@@ -34,6 +34,7 @@ import com.example.weatherapp.databinding.FragmentAlertBinding
 import com.example.weatherapp.model.AlarmData
 import com.example.weatherapp.model.Repo
 import com.example.weatherapp.model.local.LocalData
+import com.example.weatherapp.model.local.SharedPreferences
 import com.example.weatherapp.model.remote.RemoteData
 import com.example.weatherapp.viewModel.AlertFactory
 import com.example.weatherapp.viewModel.AlertViewModel
@@ -67,7 +68,9 @@ class AlertFragment : Fragment() {
     ): View? {
        binding= FragmentAlertBinding.inflate(inflater,container,false)
 
-        factory= AlertFactory(Repo.getInstance(RemoteData(), LocalData(requireContext())))
+        factory= AlertFactory(Repo.getInstance(RemoteData(), LocalData(requireContext()),
+            SharedPreferences(requireContext())
+        ))
 
         viewModel=ViewModelProvider(this,factory).get(AlertViewModel::class.java)
 

@@ -18,6 +18,7 @@ import com.example.weatherapp.databinding.FragmentFavBinding
 import com.example.weatherapp.model.FavWeather
 import com.example.weatherapp.model.Repo
 import com.example.weatherapp.model.local.LocalData
+import com.example.weatherapp.model.local.SharedPreferences
 import com.example.weatherapp.model.remote.RemoteData
 import com.example.weatherapp.viewModel.FavFactory
 import com.example.weatherapp.viewModel.FavViewModel
@@ -41,7 +42,9 @@ class FavFragment : Fragment() {
     ): View? {
 
 
-        factory= FavFactory(Repo.getInstance(RemoteData(), LocalData(requireContext())))
+        factory= FavFactory(Repo.getInstance(RemoteData(), LocalData(requireContext()),
+            SharedPreferences(requireContext())
+        ))
         favViewModel=ViewModelProvider(this,factory).get(FavViewModel::class.java)
 
         mainViewModel= ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)

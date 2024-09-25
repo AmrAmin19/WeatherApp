@@ -17,6 +17,7 @@ import com.example.weatherapp.databinding.FragmentDetailsBinding
 import com.example.weatherapp.model.FavWeather
 import com.example.weatherapp.model.Repo
 import com.example.weatherapp.model.local.LocalData
+import com.example.weatherapp.model.local.SharedPreferences
 import com.example.weatherapp.model.remote.RemoteData
 import com.example.weatherapp.view.home.DailyForcastAdapter
 import com.example.weatherapp.view.home.HourlyForcastAdabter
@@ -42,7 +43,9 @@ class DetailsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding=FragmentDetailsBinding.inflate(inflater,container,false)
-        factory=DetailsFactory(Repo.getInstance(RemoteData(), LocalData(requireContext())))
+        factory=DetailsFactory(Repo.getInstance(RemoteData(), LocalData(requireContext()),
+            SharedPreferences(requireContext())
+        ))
         viewModel=ViewModelProvider(this,factory).get(DetailsViewModel::class.java)
         return binding.root
     }

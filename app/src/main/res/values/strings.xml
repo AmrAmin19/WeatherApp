@@ -26,5 +26,22 @@
     <string name="check_weather">Check The Weather</string>
     <string name="alarm">Alarm</string>
     <string name="time">Time</string>
+    <string name="location">Location</string>
+    <string name="location_error">Please enable your location</string>
+    <string name="gps">Gps</string>
+    <string name="map">Map</string>
+    <string name="language">Language</string>
+    <string name="english">English</string>
+    <string name="arabic">Arabic</string>
+    <string name="temperature">Temperature</string>
+    <string name="celsius">Celsius</string>
+    <string name="kelvin">Kelvin</string>
+    <string name="fahrenheit">Fahrenheit</string>
+    <string name="windspeed">WindSpeed</string>
+    <string name="mps">Mps</string>
+    <string name="mph">Mph</string>
+    <string name="notification">notification</string>
+    <string name="enable">Enable</string>
+    <string name="disable">Disable</string>
 
 </resources>

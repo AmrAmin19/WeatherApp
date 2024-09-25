@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentHomeBinding
 import com.example.weatherapp.model.Repo
+import com.example.weatherapp.model.local.SharedPreferences
 import com.example.weatherapp.model.remote.RemoteData
 import com.example.weatherapp.view.Communicator
 import com.example.weatherapp.viewModel.HomeFactory
@@ -53,7 +54,9 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        factory=HomeFactory(Repo.getInstance(RemoteData(), LocalData(requireContext())))
+        factory=HomeFactory(Repo.getInstance(RemoteData(), LocalData(requireContext()),
+            SharedPreferences(requireContext())
+        ))
         homeViewModel=ViewModelProvider(this,factory).get(HomeViewModel::class.java)
 
         mainViewModel=ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)

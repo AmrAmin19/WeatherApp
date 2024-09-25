@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherapp.databinding.FragmentMapBinding
 import com.example.weatherapp.model.Repo
 import com.example.weatherapp.model.local.LocalData
+import com.example.weatherapp.model.local.SharedPreferences
 import com.example.weatherapp.model.remote.RemoteData
 import com.example.weatherapp.viewModel.MainActivityViewModel
 import com.example.weatherapp.viewModel.MapFactory
@@ -52,7 +53,7 @@ class MapFragment : Fragment() {
 
 
 
-        factory= MapFactory(Repo.getInstance(RemoteData(), LocalData(requireContext())))
+        factory= MapFactory(Repo.getInstance(RemoteData(), LocalData(requireContext()),SharedPreferences(requireContext())))
         viewmodel=ViewModelProvider(this,factory).get(MapViewModel::class.java)
 
         binding= FragmentMapBinding.inflate(inflater,container,false)

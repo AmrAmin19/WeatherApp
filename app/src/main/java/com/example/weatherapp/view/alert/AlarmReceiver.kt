@@ -51,7 +51,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val notificationManager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         val intent = Intent(context, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntent = PendingIntent.getActivity(context, notificationRequest, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         val notification = Notification.Builder(context, "channel_id")
             .setContentTitle("Alert")
