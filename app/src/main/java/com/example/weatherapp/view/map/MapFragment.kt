@@ -1,5 +1,7 @@
 package com.example.weatherapp.view.map
 
+import android.graphics.drawable.Drawable
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -15,7 +17,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentMapBinding
+import com.example.weatherapp.model.MapArgs
 import com.example.weatherapp.model.Repo
 import com.example.weatherapp.model.local.LocalData
 import com.example.weatherapp.model.local.SharedPreferences
@@ -41,6 +45,8 @@ class MapFragment : Fragment() {
     lateinit var factory: MapFactory
     lateinit var adapter: RecyclerViewAdapter // Adapter for search results
 
+    private var sourceFragment: String? = null
+
 
 
     var lat :Double=0.0
@@ -51,7 +57,7 @@ class MapFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-
+       sourceFragment = arguments?.getString(MapArgs.SourceFragment_Key)
 
         factory= MapFactory(Repo.getInstance(RemoteData(), LocalData(requireContext()),SharedPreferences(requireContext())))
         viewmodel=ViewModelProvider(this,factory).get(MapViewModel::class.java)
@@ -65,6 +71,7 @@ class MapFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
 
 
@@ -137,18 +144,44 @@ class MapFragment : Fragment() {
         binding.map.overlays.add(overlayEvents)
 
 
-        binding.btnOk.setOnClickListener {
 
-            // changed from lon > 0 --> lon !=0
-            if (lat != 0.0 && lon != 0.0) {
 
-                viewmodel.fetchDataFromApi(lat,lon)
-            } else {
-                Toast.makeText(requireContext(), "No location selected", Toast.LENGTH_SHORT).show()
-            }
+        when(sourceFragment)
+        {
+            MapArgs.FavFragment_Source-> binding.btnOk.setImageResource(R.drawable.baseline_favorite_24)
+            MapArgs.SettingsFragment_Source-> binding.btnOk.setImageResource(R.drawable.baseline_add_24)
         }
 
 
+        binding.btnOk.setOnClickListener {
+
+
+            when(sourceFragment)
+            {
+                MapArgs.FavFragment_Source-> {
+
+                    // changed from lon > 0 --> lon !=0
+                    if (lat != 0.0 && lon != 0.0) {
+
+                        viewmodel.fetchDataFromApi(lat,lon)
+                    } else {
+                        Toast.makeText(requireContext(), "No location selected", Toast.LENGTH_SHORT).show()
+                    }
+
+                }
+                MapArgs.SettingsFragment_Source->{
+                    mainViewModel.updateLocation(Location("").apply {
+                        latitude = lat
+                        longitude = lon
+                    })
+
+                    findNavController().popBackStack()
+
+                }
+            }
+
+
+        }
 
     }
 
@@ -212,9 +245,6 @@ class MapFragment : Fragment() {
     private fun getCoordinates(location: String) {
       viewmodel.getLocation(location)
     }
-
-
-
 
 
 }

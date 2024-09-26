@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.example.weatherapp.R
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.AlarmManager
 import android.app.AlertDialog
 import android.app.DatePickerDialog
@@ -29,10 +30,12 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherapp.databinding.FragmentAlertBinding
 import com.example.weatherapp.model.AlarmData
 import com.example.weatherapp.model.Repo
+import com.example.weatherapp.model.SharedPreferencesKeys
 import com.example.weatherapp.model.local.LocalData
 import com.example.weatherapp.model.local.SharedPreferences
 import com.example.weatherapp.model.remote.RemoteData
@@ -41,6 +44,7 @@ import com.example.weatherapp.viewModel.AlertViewModel
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import java.util.Locale
 
 
 class AlertFragment : Fragment() {
@@ -53,6 +57,8 @@ class AlertFragment : Fragment() {
         private val sharedPreferencesName = "alert_preferences"
         private val requestCodeKey = "request_code"
         var requestCode: Int = 0
+
+     var notificationSharedPreferences:String="enable"
 
     private val notificationChannelId = "channel_id"
 
@@ -84,6 +90,8 @@ class AlertFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+         notificationSharedPreferences =viewModel.getSettingsPrefs(SharedPreferencesKeys.Notification_key,"enable")
 
         myAdapter=AlarmAdapter()
         binding.AlarmRecycelView.layoutManager= LinearLayoutManager(context)
@@ -160,7 +168,7 @@ class AlertFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun showTypeDialog(calendar: Calendar) {
         // test
-       updateRequestCode()
+        updateRequestCode()
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Select Type")
 
@@ -168,7 +176,16 @@ class AlertFragment : Fragment() {
         builder.setItems(types) { _, which ->
             when (which) {
                 0 -> checkAlarmPermission(calendar)
-                1 -> checkNotificationPermission(calendar)
+                1 -> {
+                    when(notificationSharedPreferences)
+                    {
+                        "enable" -> checkNotificationPermission(calendar)
+                        else -> {Toast.makeText(requireContext(), "Notification is disabled", Toast.LENGTH_SHORT).show()
+                           findNavController().navigate(AlertFragmentDirections.actionAlertFragmentToSettingsFragment())
+
+                        }
+                    }
+                }
             }
         }
         builder.show()
@@ -187,6 +204,7 @@ class AlertFragment : Fragment() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestNotificationPermission(calendar)
         } else {
+            // here puc check
             showNotification(calendar)
         }
     }
@@ -228,6 +246,7 @@ class AlertFragment : Fragment() {
             checkOverlayPermission()
 
             viewModel.insertAlarm(AlarmData(alarmRequest,alarmTimeInMillis))
+          //  updateRequestCode()
             Toast.makeText(requireContext(), "Alarm Set Successfully! ${getRequestCodeFromPreferences()}", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "Failed to set alarm: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -336,6 +355,8 @@ class AlertFragment : Fragment() {
 
 
     }
+
+
 
 
 }

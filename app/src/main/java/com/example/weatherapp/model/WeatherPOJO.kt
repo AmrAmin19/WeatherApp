@@ -60,8 +60,8 @@ data class WeatherInfo(
 )
 
 data class Main(
-    val temp: Double,
-    val feels_like: Double,
+    var temp: Double,
+    var feels_like: Double,
     val temp_min: Double,
     val temp_max: Double,
     val pressure: Int,
@@ -83,7 +83,7 @@ data class Clouds(
 )
 
 data class Wind(
-    val speed: Double,
+    var speed: Double,
     val deg: Int,
     val gust: Double
 )
@@ -117,8 +117,8 @@ data class Coord(
 data class DailyForecast(
     val date: String,
     val dayName: String,
-    val minTemp: Double,
-    val maxTemp: Double,
+    var minTemp: String,
+    var maxTemp: String,
     val avgHumidity: Double,
     val weatherDescription: String,
     val icon: String
@@ -127,7 +127,7 @@ data class DailyForecast(
 
 data class HourlyForecast(
     val time: String,  // Time of the forecast (e.g., 15:00)
-    val temp: Double,
+    var temp: String,
     val weatherDescription: String,
     val icon: String
 )

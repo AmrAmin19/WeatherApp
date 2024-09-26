@@ -9,6 +9,7 @@ import com.example.weatherapp.model.CurrentWeatherResponse
 import com.example.weatherapp.model.DailyForecast
 import com.example.weatherapp.model.HourlyForecast
 import com.example.weatherapp.model.Irepo
+import com.example.weatherapp.model.SharedPreferencesKeys
 import com.example.weatherapp.model.WeatherResponse
 import kotlinx.coroutines.launch
 
@@ -33,10 +34,14 @@ class DetailsViewModel(val repo:Irepo) :ViewModel(){
 
 
 
+    fun getSettingsPrefs(key:String,default:String):String{
+        return repo.getSettingsPrefs(key,default)
+    }
+
     fun fetchCurrentWeather(lat: Double,lon: Double)
     {
         viewModelScope.launch {
-            val weather= repo.getCurrentWeather(lat,lon)
+            val weather= repo.getCurrentWeather(lat,lon,getSettingsPrefs(SharedPreferencesKeys.Language_key,"en"))
             _currentWeather.postValue(weather)
         }
     }
@@ -44,7 +49,7 @@ class DetailsViewModel(val repo:Irepo) :ViewModel(){
     fun fetchForecastWeather(lat: Double,lon: Double)
     {
         viewModelScope.launch {
-            val fWeather=repo.getForecastWeather(lat,lon)
+            val fWeather=repo.getForecastWeather(lat,lon,getSettingsPrefs(SharedPreferencesKeys.Language_key,"en"))
             val dailyWeather = repo.getDailyForecasts(fWeather)
             val hourlyweather =repo.getHourlyForecastForToday(fWeather)
 

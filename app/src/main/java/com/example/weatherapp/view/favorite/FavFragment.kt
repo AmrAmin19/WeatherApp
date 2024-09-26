@@ -16,6 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentFavBinding
 import com.example.weatherapp.model.FavWeather
+import com.example.weatherapp.model.MapArgs
 import com.example.weatherapp.model.Repo
 import com.example.weatherapp.model.local.LocalData
 import com.example.weatherapp.model.local.SharedPreferences
@@ -82,7 +83,8 @@ class FavFragment : Fragment() {
 
         binding.fabOpenMap.setOnClickListener {
 
-           findNavController().navigate(R.id.action_favFragment_to_mapFragment)
+          val actionFrag=  FavFragmentDirections.actionFavFragmentToMapFragment(MapArgs.FavFragment_Source)
+            findNavController().navigate(actionFrag)
 
         }
 

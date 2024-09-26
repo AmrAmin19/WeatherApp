@@ -16,7 +16,6 @@ import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentDetailsBinding
 import com.example.weatherapp.model.FavWeather
 import com.example.weatherapp.model.Repo
-import com.example.weatherapp.model.SharedPreferencesKeys
 import com.example.weatherapp.model.local.LocalData
 import com.example.weatherapp.model.local.SharedPreferences
 import com.example.weatherapp.model.remote.RemoteData
@@ -94,13 +93,13 @@ class DetailsFragment : Fragment() {
                 .into(binding.weatherIcon)
 
 
-            binding.weatherCondition.text=it.weather[0].description
+            binding.weatherCondition.text=it.weather[0].main
 
-            binding.temperatureText.text=convertTemperature(it.main.temp,settings[SharedPreferencesKeys.Temprature_key]?:"C")
+            binding.temperatureText.text=it.main.temp.toInt().toString()
 
             binding.humadityVal.text=it.main.humidity.toString()
-            binding.windVal.text=convertWindSpeed(it.wind.speed,settings[SharedPreferencesKeys.Speed_key]?:"mps")
-            binding.fellLikeVal.text=convertTemperature(it.main.feels_like,settings[SharedPreferencesKeys.Temprature_key]?:"C")
+            binding.windVal.text=getString(R.string.windSpeed,it.wind.speed.toInt().toString(),"M/s")
+            binding.fellLikeVal.text=it.main.feels_like.toInt().toString()
 
 
         })
@@ -109,15 +108,7 @@ class DetailsFragment : Fragment() {
 
             showLoading(false)
 
-            val dailyForecast = it.map {
-                    daily ->
-                daily.copy(
-                    maxTemp = convertTemperature(daily.maxTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C"),
-                    minTemp = convertTemperature(daily.minTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C")
-                )
-            }
-
-            dayAdapter.submitList(dailyForecast)
+            dayAdapter.submitList(it)
 
         })
 
@@ -125,13 +116,7 @@ class DetailsFragment : Fragment() {
 
             Log.d("AmrDataTes", "${it.size}  ")
 
-            val hourlyForecast = it.map {
-                    hourly ->
-                hourly.copy(temp=convertTemperature(hourly.temp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C"))
-            }
-
-
-            hourAdabter.submitList(hourlyForecast)
+            hourAdabter.submitList(it)
         })
 
     }
@@ -176,23 +161,6 @@ class DetailsFragment : Fragment() {
             binding.feelsLikeIcon.visibility=View.VISIBLE
             binding.feelsLikeText.visibility=View.VISIBLE
         }
-    }
-
-    fun convertTemperature(tempInCelsius: Double, unit: String): String {
-        return when (unit) {
-            "K" -> getString(R.string.temprature,"${(tempInCelsius + 273.15).toInt()} ","K")  // Celsius to Kelvin
-            "F" ->  getString(R.string.temprature,"${(tempInCelsius * 9/5 + 32).toInt()} ","F")   // Celsius to Fahrenheit
-            else -> getString(R.string.temprature,"${tempInCelsius.toInt()} ","C")  // Default is Celsius
-        }
-    }
-
-    fun convertWindSpeed(speed: Double, unit: String): String {
-        return when (unit) {
-            "mph" ->getString(R.string.windSpeed,(speed * 2.23694).toInt().toString(),"Mph") // Convert mps to mph
-            "mps" -> getString(R.string.windSpeed,speed .toInt().toString(),"M/s")
-            else -> getString(R.string.windSpeed,speed .toInt().toString(),"M/s")
-        }
-
     }
 
 

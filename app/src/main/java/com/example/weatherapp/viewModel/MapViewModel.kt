@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.model.Irepo
 import com.example.weatherapp.model.LocationResponce
+import com.example.weatherapp.model.SharedPreferencesKeys
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -76,7 +77,9 @@ class MapViewModel(var repo:Irepo):ViewModel() {
     }
 
 
-
+    fun getSettingsPrefs(key:String,default:String):String{
+        return repo.getSettingsPrefs(key,default)
+    }
 
 
     fun fetchDataFromApi(lat:Double,lon:Double)
@@ -106,7 +109,8 @@ class MapViewModel(var repo:Irepo):ViewModel() {
 //                // Optionally, post a fallback value or notify the UI of the error
 //            }
 
-            val weatherResponse= repo.getForecastWeather(lat,lon)
+            val weatherResponse= repo.getForecastWeather(lat,lon,getSettingsPrefs(
+                SharedPreferencesKeys.Language_key,"en"))
 
             val temp = repo.getFavWeather(weatherResponse)
 

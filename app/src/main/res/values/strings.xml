@@ -14,13 +14,13 @@
     <string name="weather_icon">Weather icon</string>
     <string name="weatherMood">Clear</string>
     <string name="humadityValue">56%</string>
-    <string name="temprature">24°C</string>
+    <string name="temprature">%1$s°%2$s</string>
     <string name="humidity">HUMIDITY</string>
-    <string name="windSpeed">%1$s km/h</string>
+    <string name="windSpeed">%1$s %2$s</string>
     <string name="wind">WIND</string>
     <string name="feelLikeTemp">22 °C</string>
     <string name="feels_like">FEELS LIKE</string>
-    <string name="minMaxTemp">%1$d - %2$d</string>
+    <string name="minMaxTemp">%1$s - %2$s</string>
     <string name="stop">Stop</string>
     <string name="go_to_weather">Weather</string>
     <string name="check_weather">Check The Weather</string>

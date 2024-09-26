@@ -14,18 +14,25 @@ import java.util.Locale
 class RemoteData :IremoteData {
     val services :ApiServices = RetrofitClient.service
 
-   override suspend fun getCurrentWeather(lat: Double,lon: Double):CurrentWeatherResponse
+   override suspend fun getCurrentWeather(lat: Double,lon: Double,lang:String):CurrentWeatherResponse
     {
         Log.d("AmrTestCalls", "getCurrentWeather: ")
-      return  services.getCurrentWeather(lat = lat,
-            lon = lon)
+      return  services.getCurrentWeather(
+          lat = lat,
+          lon = lon,
+          lang = lang
+
+      )
     }
 
-    override suspend fun getForecastWeather(lat: Double,lon: Double):WeatherResponse
+    override suspend fun getForecastWeather(lat: Double,lon: Double, lang: String):WeatherResponse
     {
         Log.d("AmrTestCalls", "getForecastWeather: ")
-        return  services.getWeatherForecast(lat = lat,
-            lon = lon)
+        return  services.getWeatherForecast(
+            lat = lat,
+            lon = lon,
+            lang = lang
+        )
     }
 
     override suspend fun getLocationByName (name:String) : List<LocationResponce>
@@ -52,8 +59,8 @@ class RemoteData :IremoteData {
             val date = dateFormat.parse(formattedDate)!! // Parse the formatted date back into a Date object
             val dayName = dayFormat.format(date) // Get the day name (e.g., Monday)
 
-            val minTemp = weatherInfoList.minOf { it.main.temp_min }
-            val maxTemp = weatherInfoList.maxOf { it.main.temp_max }
+            val minTemp = weatherInfoList.minOf { it.main.temp_min }.toString()
+            val maxTemp = weatherInfoList.maxOf { it.main.temp_max }.toString()
             val avgHumidity = weatherInfoList.map { it.main.humidity }.average()
 
             // Choose a representative weather description and icon (e.g., the first entry)
@@ -99,7 +106,7 @@ class RemoteData :IremoteData {
                     hourlyForecasts.add(
                         HourlyForecast(
                             time = forecastTime,
-                            temp = weatherInfo.main.temp,
+                            temp = (weatherInfo.main.temp).toString(),
                             weatherDescription = representativeWeather.description,
                             icon = representativeWeather.icon
                         )

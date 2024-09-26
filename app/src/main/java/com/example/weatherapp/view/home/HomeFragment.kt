@@ -11,18 +11,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentHomeBinding
 import com.example.weatherapp.model.Repo
+import com.example.weatherapp.model.SharedPreferencesKeys
 import com.example.weatherapp.model.local.SharedPreferences
 import com.example.weatherapp.model.remote.RemoteData
 import com.example.weatherapp.view.Communicator
 import com.example.weatherapp.viewModel.HomeFactory
 import com.example.weatherapp.viewModel.HomeViewModel
 import com.example.weatherapp.viewModel.MainActivityViewModel
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -77,6 +80,12 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val settings= homeViewModel.getSettings()
+
+
+        Log.d("testAmr", "${settings[SharedPreferencesKeys.Temprature_key]} ")
+
+
 
 
         Log.d("AmrFragment", "onViewCreated: ")
@@ -121,13 +130,14 @@ class HomeFragment : Fragment() {
                 .into(binding.weatherIcon)
 
 
-            binding.weatherCondition.text=it.weather[0].main
+            binding.weatherCondition.text=it.weather[0].description
 
-            binding.temperatureText.text=it.main.temp.toInt().toString()
+           // binding.temperatureText.text=it.main.temp.toInt().toString()
+            binding.temperatureText.text=convertTemperature(it.main.temp,settings[SharedPreferencesKeys.Temprature_key]?:"C")
 
             binding.humadityVal.text=it.main.humidity.toString()
-            binding.windVal.text=getString(R.string.windSpeed,it.wind.speed.toInt().toString())
-            binding.fellLikeVal.text=it.main.feels_like.toInt().toString()
+            binding.windVal.text=convertWindSpeed(it.wind.speed,settings[SharedPreferencesKeys.Speed_key]?:"mps")
+            binding.fellLikeVal.text=convertTemperature(it.main.feels_like,settings[SharedPreferencesKeys.Temprature_key]?:"C")
 
 
         })
@@ -145,7 +155,15 @@ class HomeFragment : Fragment() {
 
             showLoading(false)
 
-            myAdapter.submitList(it)
+           val dailyForecast = it.map {
+                    daily ->
+                daily.copy(
+                    maxTemp = convertTemperature(daily.maxTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C"),
+                    minTemp = convertTemperature(daily.minTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C")
+                )
+            }
+
+            myAdapter.submitList(dailyForecast)
 
         })
 
@@ -153,7 +171,12 @@ class HomeFragment : Fragment() {
 
             Log.d("AmrDataTes", "${it.size}  ")
 
-            hourAdabter.submitList(it)
+           val hourlyForecast = it.map {
+                hourly ->
+                hourly.copy(temp=convertTemperature(hourly.temp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C"))
+            }
+
+            hourAdabter.submitList(hourlyForecast)
         })
 
         binding.swipeRefreshLayout.setOnRefreshListener {
@@ -165,6 +188,7 @@ class HomeFragment : Fragment() {
 
 
     fun convertTimestampToDate(timestamp: Long): String {
+
         val date = Date(timestamp * 1000) // Convert seconds to milliseconds
         val sdf = SimpleDateFormat("MMMM dd", Locale.getDefault()) // Format to Month name and day number
         sdf.timeZone=TimeZone.getDefault()
@@ -222,5 +246,20 @@ class HomeFragment : Fragment() {
         }
     }
 
+    fun convertTemperature(tempInCelsius: Double, unit: String): String {
+        return when (unit) {
+            "K" -> getString(R.string.temprature,"${(tempInCelsius + 273.15).toInt()} ","K")  // Celsius to Kelvin
+            "F" ->  getString(R.string.temprature,"${(tempInCelsius * 9/5 + 32).toInt()} ","F")   // Celsius to Fahrenheit
+            else -> getString(R.string.temprature,"${tempInCelsius.toInt()} ","C")  // Default is Celsius
+        }
+    }
 
+    fun convertWindSpeed(speed: Double, unit: String): String {
+        return when (unit) {
+            "mph" ->getString(R.string.windSpeed,(speed * 2.23694).toInt().toString(),"Mph") // Convert mps to mph
+            "mps" -> getString(R.string.windSpeed,speed .toInt().toString(),"M/s")
+            else -> getString(R.string.windSpeed,speed .toInt().toString(),"M/s")
+        }
+
+    }
 }

@@ -20,7 +20,9 @@ class HourForcastDiff : DiffUtil.ItemCallback<HourlyForecast>() {
     }
 }
 
-class HourlyForcastAdabter : ListAdapter<HourlyForecast, HourlyForcastAdabter.HourlyForcastViewHolder>(
+class HourlyForcastAdabter(
+//    val Shared:Map<String,String>
+) : ListAdapter<HourlyForecast, HourlyForcastAdabter.HourlyForcastViewHolder>(
     HourForcastDiff()
 )
 {
@@ -36,7 +38,7 @@ class HourlyForcastAdabter : ListAdapter<HourlyForecast, HourlyForcastAdabter.Ho
     override fun onBindViewHolder(holder: HourlyForcastViewHolder, position: Int) {
         val currentHour = getItem(position)
        holder.binding.textTime .text=currentHour.time
-        holder.binding.textTemperature.text = currentHour.temp.toInt().toString()
+        holder.binding.textTemperature.text = currentHour.temp
 
 
         Glide.with(holder.itemView.context)

@@ -7,8 +7,9 @@ import com.example.weatherapp.model.LocationResponce
 import com.example.weatherapp.model.WeatherResponse
 
 interface IremoteData {
-    suspend fun getCurrentWeather(lat: Double,lon: Double): CurrentWeatherResponse
-    suspend fun getForecastWeather(lat: Double,lon: Double): WeatherResponse
+    suspend fun getCurrentWeather(lat: Double,lon: Double,lang:String): CurrentWeatherResponse
+    suspend fun getForecastWeather(lat: Double,lon: Double,lang:String): WeatherResponse
+
     fun getDailyForecasts(weatherResponse: WeatherResponse): List<DailyForecast>
     fun getHourlyForecastForToday(weatherResponse: WeatherResponse): List<HourlyForecast>
     suspend fun getLocationByName (name:String):List<LocationResponce>

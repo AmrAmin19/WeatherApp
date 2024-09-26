@@ -21,7 +21,9 @@ class DayForcast : DiffUtil.ItemCallback<DailyForecast>() {
     }
 }
 
-class DailyForcastAdapter :ListAdapter<DailyForecast, DailyForcastAdapter.DailyViewHolder>(
+class DailyForcastAdapter(
+//    val shared:Map<String,String>
+) :ListAdapter<DailyForecast, DailyForcastAdapter.DailyViewHolder>(
     DayForcast()
 )
 {
@@ -45,8 +47,8 @@ class DailyForcastAdapter :ListAdapter<DailyForecast, DailyForcastAdapter.DailyV
         holder.binding.dailycondition.text=currentDay.weatherDescription
         holder.binding.minTemp.text = holder.itemView.context.getString(
             R.string.minMaxTemp,
-            currentDay.minTemp.toInt(),
-            currentDay.maxTemp.toInt()
+           currentDay.minTemp,
+            currentDay.maxTemp
         )
 
 

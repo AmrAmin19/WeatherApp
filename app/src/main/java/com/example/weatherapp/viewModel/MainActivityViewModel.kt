@@ -6,6 +6,9 @@ import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.weatherapp.model.SharedPreferencesKeys
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.osmdroid.util.GeoPoint
 
 
@@ -19,6 +22,11 @@ class MainActivityViewModel : ViewModel() {
     val favlocationLiveData: LiveData<Pair<Double, Double>>
         get() = _favlocationLiveData
 
+
+    private val _settingsSharedData = MutableStateFlow<List<String>>(emptyList())
+    val settingsSharedData : StateFlow<List<String>> = _settingsSharedData
+
+
     fun updateLocation(location: Location) {
         _locationLiveData.value = location
     }
@@ -27,4 +35,11 @@ class MainActivityViewModel : ViewModel() {
     {
         _favlocationLiveData.value=Pair(lat,lon)
     }
+
+
+    fun updateSettingsData(settings:List<String>)
+    {
+        _settingsSharedData.value=settings
+    }
+
 }
