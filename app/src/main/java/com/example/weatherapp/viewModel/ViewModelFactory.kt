@@ -37,17 +37,6 @@ class FavFactory(private val repo: Irepo): ViewModelProvider.Factory
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
-
-class DetailsFactory(private val repo: Irepo): ViewModelProvider.Factory
-{
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(DetailsViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return DetailsViewModel(repo) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
-}
 class MapFactory(private val repo: Irepo): ViewModelProvider.Factory
 {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

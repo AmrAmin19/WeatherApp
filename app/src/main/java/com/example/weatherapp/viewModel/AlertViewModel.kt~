@@ -29,6 +29,10 @@ class AlertViewModel(val repo :Irepo) :ViewModel() {
         getAlarms()
     }
 
+    fun getSettingsPrefs(key:String,default:String):String{
+        return repo.getSettingsPrefs(key,default)
+    }
+
 
     fun getAlarms()
     {

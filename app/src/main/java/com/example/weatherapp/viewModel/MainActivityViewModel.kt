@@ -34,19 +34,12 @@ class MainActivityViewModel (val repo: Irepo) : ViewModel() {
     private val _settingsSharedData = MutableStateFlow<String>(repo.getSettingsPrefs(SharedPreferencesKeys.Language_key,"en"))
     val settingsSharedData : StateFlow<String> = _settingsSharedData
 
-//    private val _languageSharedData = MutableStateFlow<String>("en")
-//    val languageSharedData : StateFlow<String> = _languageSharedData
 
 
 
     fun updateLocation(location: Location) {
         _locationLiveData.value = location
     }
-
-//    fun updateLanguage(lang:String)
-//    {
-//        _languageSharedData.value=lang
-//    }
 
 
     fun updateFavLocation(lat:Double,lon:Double)

@@ -6,15 +6,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentDetailsBinding
-import com.example.weatherapp.model.FavWeather
+import com.example.weatherapp.model.ApiState
+import com.example.weatherapp.model.CurrentWeatherResponse
+import com.example.weatherapp.model.NetworkUtils
 import com.example.weatherapp.model.Repo
 import com.example.weatherapp.model.SharedPreferencesKeys
 import com.example.weatherapp.model.local.LocalData
@@ -22,10 +26,9 @@ import com.example.weatherapp.model.local.SharedPreferences
 import com.example.weatherapp.model.remote.RemoteData
 import com.example.weatherapp.view.home.DailyForcastAdapter
 import com.example.weatherapp.view.home.HourlyForcastAdabter
-import com.example.weatherapp.viewModel.DetailsFactory
-import com.example.weatherapp.viewModel.DetailsViewModel
 import com.example.weatherapp.viewModel.HomeFactory
 import com.example.weatherapp.viewModel.HomeViewModel
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -38,7 +41,9 @@ class DetailsFragment : Fragment() {
 
     lateinit var dayAdapter: DailyForcastAdapter
     lateinit var hourAdabter: HourlyForcastAdabter
-//    lateinit var   favWeather :FavWeather
+
+
+   var settings = emptyMap<String,String>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,14 +62,16 @@ class DetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         showLoading(true)
 
-        val settings= viewModel.getSettings()
+         settings= viewModel.getSettings()
 
 
         val args: DetailsFragmentArgs by navArgs()  // Retrieve the arguments
        val favWeather = args.favWeather
 
-        viewModel.fetchCurrentWeather(favWeather.lat,favWeather.lon)
-        viewModel.fetchForecastWeather(favWeather.lat,favWeather.lon)
+//        viewModel.fetchCurrentWeather(favWeather.lat,favWeather.lon)
+//        viewModel.fetchForecastWeather(favWeather.lat,favWeather.lon)
+
+        fetchData(favWeather.lat,favWeather.lon)
 
         binding.locationText.text=favWeather.name
 
@@ -79,31 +86,28 @@ class DetailsFragment : Fragment() {
         binding.recycleHourView.adapter=hourAdabter
 
 
-        viewModel.currentWeather.observe(viewLifecycleOwner, Observer {
-
-            showLoading(false)
 
 
-            binding.updatedTime.text=getString(R.string.timeupdate,convertTimestampToTime(it.dt))
-            binding.dateText.text=convertTimestampToDate(it.dt)
+        lifecycleScope.launch {
+            viewModel.currentWeatherState.collect{ resource ->
+                when (resource) {
+                    is ApiState.Loading -> {
+                        showLoading(true)
+                    }
+                    is ApiState.Success<CurrentWeatherResponse> -> {
+                        showLoading(false)
 
-            Log.d("AmrDataTest", "${it.weather[0].icon} ")
+                        createUi(resource.data)
+                    }
+                    is ApiState.Error -> {
 
-            Glide.with(this.requireContext())
-                .load("https://openweathermap.org/img/wn/${it.weather[0].icon}@2x.png")
-                .into(binding.weatherIcon)
+                        showLoading(false)
+                        Toast.makeText(context, resource.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
 
-
-            binding.weatherCondition.text=it.weather[0].description
-
-            binding.temperatureText.text=convertTemperature(it.main.temp,settings[SharedPreferencesKeys.Temprature_key]?:"C")
-
-            binding.humadityVal.text=it.main.humidity.toString()
-            binding.windVal.text=convertWindSpeed(it.wind.speed,settings[SharedPreferencesKeys.Speed_key]?:"mps")
-            binding.fellLikeVal.text=convertTemperature(it.main.feels_like,settings[SharedPreferencesKeys.Temprature_key]?:"C")
-
-
-        })
 
         viewModel.dailyForecast.observe(viewLifecycleOwner, Observer {
 
@@ -134,6 +138,43 @@ class DetailsFragment : Fragment() {
             hourAdabter.submitList(hourlyForecast)
         })
 
+    }
+
+   fun createUi(currentWeather: CurrentWeatherResponse)
+   {
+
+       binding.updatedTime.text=getString(R.string.timeupdate,convertTimestampToTime(currentWeather.dt))
+       binding.dateText.text=convertTimestampToDate(currentWeather.dt)
+
+       Log.d("AmrDataTest", "${currentWeather.weather[0].icon} ")
+
+       Glide.with(requireContext())
+           .load("https://openweathermap.org/img/wn/${currentWeather.weather[0].icon}@2x.png")
+           .into(binding.weatherIcon)
+
+
+       binding.weatherCondition.text=currentWeather.weather[0].description
+
+       // binding.temperatureText.text=it.main.temp.toInt().toString()
+       binding.temperatureText.text=convertTemperature(currentWeather.main.temp,settings[SharedPreferencesKeys.Temprature_key]?:"C")
+
+       binding.humadityVal.text=currentWeather.main.humidity.toString()
+       binding.windVal.text=convertWindSpeed(currentWeather.wind.speed,settings[SharedPreferencesKeys.Speed_key]?:"mps")
+       binding.fellLikeVal.text=convertTemperature(currentWeather.main.feels_like,settings[SharedPreferencesKeys.Temprature_key]?:"C")
+
+
+   }
+
+    fun fetchData(lat:Double,lon:Double)
+    {
+
+        if (!NetworkUtils.isInternetAvailable(requireContext())) {
+            Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show()
+            return  // Exit the flow if there's no connection
+        }
+
+        viewModel.fetchCurrentWeather(lat,lon)
+        viewModel.fetchForecastWeather(lat,lon)
     }
 
 

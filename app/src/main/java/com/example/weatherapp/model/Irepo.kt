@@ -4,7 +4,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface Irepo {
     // Remote
-    suspend fun getCurrentWeather(lat: Double,lon: Double,lang:String) : CurrentWeatherResponse
+   // suspend fun getCurrentWeather(lat: Double,lon: Double,lang:String) : CurrentWeatherResponse
+    fun getCurrentWeather(lat: Double, lon: Double, lang: String): Flow<ApiState<CurrentWeatherResponse>>
     suspend fun getForecastWeather(lat: Double,lon: Double, lang: String) : WeatherResponse
     fun getDailyForecasts(weatherResponse: WeatherResponse): List<DailyForecast>
     fun getHourlyForecastForToday(weatherResponse: WeatherResponse): List<HourlyForecast>

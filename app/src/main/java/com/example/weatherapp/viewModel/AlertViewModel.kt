@@ -18,10 +18,6 @@ class AlertViewModel(val repo :Irepo) :ViewModel() {
     val alarms : StateFlow<List<AlarmData>>
         get() = _alarms
 
-//    private val _alarms= MutableLiveData<List<AlarmData>>()
-
-//    val alarms : LiveData<List<AlarmData>>
-//        get() = _alarms
 
     init {
         val currentTimeInMillis = System.currentTimeMillis()
@@ -39,12 +35,8 @@ class AlertViewModel(val repo :Irepo) :ViewModel() {
         viewModelScope.launch {
            repo.getAllLocalAlarm().collect{
 
-//               val currentTimeInMillis = System.currentTimeMillis()
-//               deleteOldAlarms(currentTimeInMillis)
-
                _alarms.value=it
 
-               //_alarms.postValue(it)
            }
         }
     }
@@ -60,7 +52,6 @@ class AlertViewModel(val repo :Irepo) :ViewModel() {
     {
         viewModelScope.launch {
             repo.deleteOldAlarms(currentTimeMillis)
-          //  getAlarms()
         }
     }
 

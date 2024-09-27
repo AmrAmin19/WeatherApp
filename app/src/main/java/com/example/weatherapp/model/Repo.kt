@@ -34,11 +34,9 @@ class Repo private constructor(
 
     // Remote
 
-   override suspend fun getCurrentWeather(lat: Double,lon: Double,lang:String) : CurrentWeatherResponse
-    {
-      return  remoteData.getCurrentWeather(lat,lon,lang)
+    override fun getCurrentWeather(lat: Double, lon: Double, lang: String): Flow<ApiState<CurrentWeatherResponse>> {
+        return remoteData.getCurrentWeather(lat,lon,lang)
     }
-
    override suspend fun getForecastWeather(lat: Double,lon: Double, lang: String) : WeatherResponse
     {
         return  remoteData.getForecastWeather(lat,lon,lang)

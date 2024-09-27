@@ -1,12 +1,15 @@
 package com.example.weatherapp.model.remote
 
 import android.util.Log
+import com.example.weatherapp.model.ApiState
 import com.example.weatherapp.model.CurrentWeatherResponse
 import com.example.weatherapp.model.DailyForecast
 import com.example.weatherapp.model.HourlyForecast
 import com.example.weatherapp.model.LocationResponce
 import com.example.weatherapp.model.WeatherInfo
 import com.example.weatherapp.model.WeatherResponse
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -14,15 +17,22 @@ import java.util.Locale
 class RemoteData :IremoteData {
     val services :ApiServices = RetrofitClient.service
 
-   override suspend fun getCurrentWeather(lat: Double,lon: Double,lang:String):CurrentWeatherResponse
-    {
-        Log.d("AmrTestCalls", "getCurrentWeather: ")
-      return  services.getCurrentWeather(
-          lat = lat,
-          lon = lon,
-          lang = lang
 
-      )
+
+    override fun getCurrentWeather(lat: Double, lon: Double, lang: String): Flow<ApiState<CurrentWeatherResponse>> = flow {
+        emit(ApiState.Loading)  // Emit a loading state
+
+        try {
+            // Call the suspend function to get the weather data
+            val currentWeather = services.getCurrentWeather(lat, lon, lang)
+
+            // Emit the success state with the weather data
+            emit(ApiState.Success(currentWeather))
+        } catch (e: Exception) {
+            // Emit an error state with the exception message
+            emit(ApiState.Error("Error fetching weather data: ${e.message ?: "Unknown Error"}"))
+            Log.e("API Error", "Error fetching weather data: ${e.message}")
+        }
     }
 
     override suspend fun getForecastWeather(lat: Double,lon: Double, lang: String):WeatherResponse

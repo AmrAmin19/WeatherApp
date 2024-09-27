@@ -59,10 +59,6 @@ class MainActivity : AppCompatActivity(),Communicator {
             MainFactory(Repo.getInstance(RemoteData(), LocalData(this), SharedPreferences(this)))
         viewModel = ViewModelProvider(this, mainFactory).get(MainActivityViewModel::class.java)
 
-        // Initialize Location services
-//        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-
         setSupportActionBar(binding.customToolbar)
 
         val actionBar = supportActionBar
@@ -92,12 +88,6 @@ class MainActivity : AppCompatActivity(),Communicator {
             actionBar?.title = destination.label
         }
 
-//       val repo=Repo.getInstance(RemoteData(), LocalData(this), SharedPreferences(this))
-//     //  setLocale( repo.getSettingsPrefs(SharedPreferencesKeys.Language_key,"en"), this)
-//
-//
-//
-//        checkAndChangLocality(repo.getSettingsPrefs(SharedPreferencesKeys.Language_key,"en"))
 
         lifecycleScope.launch {
             viewModel.settingsSharedData.collect {
@@ -139,21 +129,6 @@ class MainActivity : AppCompatActivity(),Communicator {
         }
     }
 
-//    fun setLocale(languageCode: String, context: Context) {
-//        val locale = Locale(languageCode)
-//        Locale.setDefault(locale)
-//
-//        val config = context.resources.configuration
-//        config.setLocale(locale)
-//
-//        context.resources.updateConfiguration(config, context.resources.displayMetrics)
-//
-//
-//
-////        val intent = (context as Activity).intent
-////        context.finish()
-////        context.startActivity(intent)
-//    }
 
     override fun onStart() {
         super.onStart()
@@ -185,24 +160,6 @@ class MainActivity : AppCompatActivity(),Communicator {
             }
         }
 
-//       if (checkPermission())
-//       {
-//
-//           if (isLocationEnabled())
-//           {
-//               getFreshLocation()
-//           }
-//           else
-//           {
-//               enableLocationServices()
-//           }
-//
-//       }
-//        else
-//        {
-//            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
-//                Manifest.permission.ACCESS_COARSE_LOCATION),1)
-//        }
     }
 
    override  fun getMapLocation()
@@ -214,46 +171,6 @@ class MainActivity : AppCompatActivity(),Communicator {
         })
     }
 
-
-
-//    private fun startLocationUpdates() {
-//        // Build the location request
-//        val locationRequest = LocationRequest.Builder(5000).apply {
-//            setMinUpdateIntervalMillis(2000)
-//            setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-//        }.build()
-//
-//        val permissions = arrayOf(
-//            Manifest.permission.ACCESS_FINE_LOCATION,
-//            Manifest.permission.ACCESS_COARSE_LOCATION
-//        )
-//
-//        // Check if permissions are granted
-//        if (permissions.all { ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED }) {
-//            // Permissions granted, start location updates
-//            fusedLocationClient.requestLocationUpdates(locationRequest, object : LocationCallback() {
-//                override fun onLocationResult(locationResult: LocationResult) {
-//                    val location = locationResult.lastLocation
-//                    if (location != null) {
-//                        Log.d("Amr", "onLocationResult: ${location.latitude}, ${location.longitude}")
-//                        viewModel.updateLocation(location)  // Pass location to ViewModel
-//                        fusedLocationClient.removeLocationUpdates(this)
-//
-//                        binding.swipeRefreshLayout.isRefreshing = false
-//                    }
-//                }
-//            }, Looper.myLooper())  // Use main looper
-//        } else {
-//            // Only request permissions if they haven't been requested before
-//            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-//                // Request permissions if they are not already granted
-//                ActivityCompat.requestPermissions(this, permissions, 1)
-//            } else {
-//                // Handle the case where the user denied the permissions before
-//                Log.d("Amr", "Location permissions denied")
-//            }
-//        }
-//    }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -287,10 +204,6 @@ class MainActivity : AppCompatActivity(),Communicator {
                         viewModel.updateLocation(location)  // Pass location to ViewModel
                         fusedLocationClient.removeLocationUpdates(this)
 
-
-
-
-                      //  swipeRefreshLayout.isRefreshing = false
                     }
                 }
             },

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.weatherapp.model.ApiState
 import com.example.weatherapp.model.CurrentWeatherResponse
 import com.example.weatherapp.model.DailyForecast
 import com.example.weatherapp.model.HourlyForecast
@@ -12,6 +13,8 @@ import com.example.weatherapp.model.Irepo
 import com.example.weatherapp.model.SharedPreferencesKeys
 import com.example.weatherapp.model.WeatherInfo
 import com.example.weatherapp.model.WeatherResponse
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -19,9 +22,9 @@ import java.util.Locale
 
 class HomeViewModel(val repo :Irepo) : ViewModel() {
 
-    private val _currentWeather = MutableLiveData<CurrentWeatherResponse>()
-    val currentWeather :LiveData<CurrentWeatherResponse>
-        get() = _currentWeather
+
+    private val _currentWeatherState = MutableStateFlow<ApiState<CurrentWeatherResponse>>(ApiState.Loading)
+    val currentWeatherState: StateFlow<ApiState<CurrentWeatherResponse>> = _currentWeatherState
 
 
     private val _forecastWeather = MutableLiveData<WeatherResponse>()
@@ -53,22 +56,13 @@ class HomeViewModel(val repo :Irepo) : ViewModel() {
     }
 
 
-
     fun fetchCurrentWeather(lat: Double,lon: Double)
     {
-       viewModelScope.launch {
-
-         val weather= repo.getCurrentWeather(lat,lon,getSettingsPrefs(SharedPreferencesKeys.Language_key,"en"))
-
-//           weather.main.temp = convertTemperature(weather.main.temp, getSettingsPrefs(SharedPreferencesKeys.Temprature_key,"C"))
-//
-//           weather.main.feels_like=convertTemperature(weather.main.feels_like, getSettingsPrefs(SharedPreferencesKeys.Temprature_key,"C"))
-//
-//           weather.wind.speed = convertTemperature(weather.wind.speed, getSettingsPrefs(SharedPreferencesKeys.Speed_key,"mps"))
-
-
-           _currentWeather.postValue(weather)
-       }
+        viewModelScope.launch {
+          repo.getCurrentWeather(lat,lon,getSettingsPrefs(SharedPreferencesKeys.Language_key,"en")).collect{
+             _currentWeatherState.value=it
+          }
+        }
     }
 
     fun fetchForecastWeather(lat: Double,lon: Double)
@@ -80,10 +74,6 @@ class HomeViewModel(val repo :Irepo) : ViewModel() {
 
             Log.d("AmrDataTest", "${hourlyweather.size}")
 
-//            val dailyWeather = repo.getDailyForecasts(fWeather).map { daily ->
-//                daily.copy(maxTemp = convertTemperature(daily.temp, temperatureUnit))
-//            }
-
            _dailyForecast.postValue(dailyWeather)
             _forecastWeather.postValue(fWeather)
             _hourlyForecast.postValue(hourlyweather)
@@ -92,13 +82,6 @@ class HomeViewModel(val repo :Irepo) : ViewModel() {
     }
 
 
-//    fun convertTemperature(tempInCelsius: Double, unit: String): Double {
-//        return when (unit) {
-//            "K" -> tempInCelsius + 273.15  // Celsius to Kelvin
-//            "F" -> (tempInCelsius * 9/5) + 32  // Celsius to Fahrenheit
-//            else -> tempInCelsius  // Default is Celsius
-//        }
-//    }
 
 
 }

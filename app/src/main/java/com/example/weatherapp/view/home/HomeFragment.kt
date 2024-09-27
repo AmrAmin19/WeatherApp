@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +18,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentHomeBinding
+import com.example.weatherapp.model.ApiState
+import com.example.weatherapp.model.CurrentWeather
+import com.example.weatherapp.model.CurrentWeatherResponse
+import com.example.weatherapp.model.NetworkUtils
 import com.example.weatherapp.model.Repo
 import com.example.weatherapp.model.SharedPreferencesKeys
 import com.example.weatherapp.model.local.SharedPreferences
@@ -49,7 +54,8 @@ class HomeFragment : Fragment() {
     lateinit var mainViewModel:MainActivityViewModel
     lateinit var myAdapter: DailyForcastAdapter
     lateinit var hourAdabter: HourlyForcastAdabter
-  //  private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    var  settings = emptyMap<String,String>()
 
     private var latOld: Double = 0.0
     private var lonOld: Double = 0.0
@@ -70,9 +76,6 @@ class HomeFragment : Fragment() {
 
         binding=FragmentHomeBinding.inflate(inflater,container,false)
 
-     //   fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-
-       // startLocationUpdates()
 
         Log.d("AmrFragment", "onCreateView: ")
 
@@ -84,7 +87,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val settings= homeViewModel.getSettings()
+         settings= homeViewModel.getSettings()
 
 
         Log.d("testAmr", "${settings[SharedPreferencesKeys.Temprature_key]} ")
@@ -108,43 +111,33 @@ class HomeFragment : Fragment() {
 
 
        mainViewModel.locationLiveData.observe(viewLifecycleOwner, Observer {
-
-               //  showLoading(true)
-//           binding.swipeRefreshLayout.isEnabled=false
                fetchWeatherData(it.latitude,it.longitude)
-           // to stop refresh
+
            binding.swipeRefreshLayout.isRefreshing = false
 
        })
 
 
-        homeViewModel.currentWeather.observe(viewLifecycleOwner, Observer {
+        lifecycleScope.launch {
+            homeViewModel.currentWeatherState.collect{ resource ->
+                when (resource) {
+                    is ApiState.Loading -> {
+                        showLoading(true)
+                    }
+                    is ApiState.Success<CurrentWeatherResponse> -> {
+                        showLoading(false)
 
-            showLoading(false)
+                        createUi(resource.data)
+                    }
+                    is ApiState.Error -> {
 
+                        showLoading(false)
+                        Toast.makeText(context, resource.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
 
-
-            binding.updatedTime.text=getString(R.string.timeupdate,convertTimestampToTime(it.dt))
-            binding.dateText.text=convertTimestampToDate(it.dt)
-
-            Log.d("AmrDataTest", "${it.weather[0].icon} ")
-
-            Glide.with(this.requireContext())
-                .load("https://openweathermap.org/img/wn/${it.weather[0].icon}@2x.png")
-                .into(binding.weatherIcon)
-
-
-            binding.weatherCondition.text=it.weather[0].description
-
-           // binding.temperatureText.text=it.main.temp.toInt().toString()
-            binding.temperatureText.text=convertTemperature(it.main.temp,settings[SharedPreferencesKeys.Temprature_key]?:"C")
-
-            binding.humadityVal.text=it.main.humidity.toString()
-            binding.windVal.text=convertWindSpeed(it.wind.speed,settings[SharedPreferencesKeys.Speed_key]?:"mps")
-            binding.fellLikeVal.text=convertTemperature(it.main.feels_like,settings[SharedPreferencesKeys.Temprature_key]?:"C")
-
-
-        })
 
         homeViewModel.forecastWeather.observe(viewLifecycleOwner, Observer {
 
@@ -190,17 +183,34 @@ class HomeFragment : Fragment() {
              }
         }
 
-//        viewLifecycleOwner.lifecycleScope.launch {
-//            mainViewModel.locationSettingsSharedData.collect{
-//
-//                when(it){
-//                    "gps"->communicator.getFreshLocation()
-//                    "map"->communicator.getMapLocation()
-//                }
-//            }
-//        }
+    }
+
+
+    fun createUi(currentWeather:CurrentWeatherResponse)
+    {
+
+        binding.updatedTime.text=getString(R.string.timeupdate,convertTimestampToTime(currentWeather.dt))
+        binding.dateText.text=convertTimestampToDate(currentWeather.dt)
+
+        Log.d("AmrDataTest", "${currentWeather.weather[0].icon} ")
+
+        Glide.with(requireContext())
+            .load("https://openweathermap.org/img/wn/${currentWeather.weather[0].icon}@2x.png")
+            .into(binding.weatherIcon)
+
+
+        binding.weatherCondition.text=currentWeather.weather[0].description
+
+        // binding.temperatureText.text=it.main.temp.toInt().toString()
+        binding.temperatureText.text=convertTemperature(currentWeather.main.temp,settings[SharedPreferencesKeys.Temprature_key]?:"C")
+
+        binding.humadityVal.text=currentWeather.main.humidity.toString()
+        binding.windVal.text=convertWindSpeed(currentWeather.wind.speed,settings[SharedPreferencesKeys.Speed_key]?:"mps")
+        binding.fellLikeVal.text=convertTemperature(currentWeather.main.feels_like,settings[SharedPreferencesKeys.Temprature_key]?:"C")
+
 
     }
+
 
 
 
@@ -223,6 +233,12 @@ class HomeFragment : Fragment() {
 
     private fun fetchWeatherData(lat: Double, lon: Double) {
         // Check if the latitude and longitude have changed
+
+        if (!NetworkUtils.isInternetAvailable(requireContext())) {
+            Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show()
+            return  // Exit the flow if there's no connection
+        }
+
         if (latOld == lat && lonOld == lon) {
             // If they haven't changed, return early
             return
