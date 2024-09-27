@@ -155,5 +155,12 @@ class Repo private constructor(
         return sharedPreferences.getLocationPrefs(key, default)
     }
 
+     override  fun AddAlertPrefs(key: String, value: Int) {
+        sharedPreferences.AddAlertPrefs(key, value)
+    }
+   override fun getAlertPrefs(key: String, default: Int): Int {
+        return sharedPreferences.getAlertPrefs(key, default)
+    }
+
 
 }

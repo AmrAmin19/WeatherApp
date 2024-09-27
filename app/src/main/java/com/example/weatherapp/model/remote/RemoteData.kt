@@ -52,6 +52,7 @@ class RemoteData :IremoteData {
         }
     }
 
+
     override suspend fun getLocationByName (name:String) : List<LocationResponce>
     {
         return services.getLocationByName(name)

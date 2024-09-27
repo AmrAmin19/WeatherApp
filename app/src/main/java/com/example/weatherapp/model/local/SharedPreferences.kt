@@ -23,4 +23,13 @@ class SharedPreferences(context: Context) :IsharedPrefs{
     override fun getLocationPrefs(key: String, default: Double): Double {
        return preferences.getFloat(key, default.toFloat()).toDouble()
     }
+
+   override fun AddAlertPrefs(key:String,value:Int)
+    {
+        preferences.edit().putInt(key, value).apply()
+    }
+   override fun getAlertPrefs(key:String,default:Int):Int
+    {
+        return preferences.getInt(key, default)
+    }
 }

@@ -33,6 +33,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherapp.databinding.FragmentAlertBinding
+import com.example.weatherapp.model.ALERT_KEYS
 import com.example.weatherapp.model.AlarmData
 import com.example.weatherapp.model.Repo
 import com.example.weatherapp.model.SharedPreferencesKeys
@@ -80,7 +81,7 @@ class AlertFragment : Fragment() {
 
         viewModel=ViewModelProvider(this,factory).get(AlertViewModel::class.java)
 
-        requestCode=getRequestCodeFromPreferences()
+        requestCode = getRequestCodeFromPreferences()
 
         createNotificationChannel()
 
@@ -101,20 +102,10 @@ class AlertFragment : Fragment() {
            showAlertDialog()
        }
 
-//        viewModel.alarms.observe(viewLifecycleOwner, Observer {
-//
-//            val currentTimeInMillis = System.currentTimeMillis()
-//           viewModel.deleteOldAlarms(currentTimeInMillis)
-//
-//            myAdapter.submitList(it)
-//        })
-
-    //    val currentTimeInMillis = System.currentTimeMillis()
            viewModel.deleteOldAlarms(System.currentTimeMillis())
 
     viewLifecycleOwner.lifecycleScope.launch {
         viewModel.alarms.collect{
-//            val newList = it.filter { obj -> obj.time > currentTimeInMillis }
             myAdapter.submitList(it)
         }
     }
@@ -168,7 +159,8 @@ class AlertFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun showTypeDialog(calendar: Calendar) {
         // test
-        updateRequestCode()
+       updateRequestCode()
+
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Select Type")
 
@@ -210,7 +202,7 @@ class AlertFragment : Fragment() {
     }
 
     private fun setAlarm(calendar: Calendar) {
-        var alarmRequest =  getRequestCodeFromPreferences()
+        var alarmRequest = getRequestCodeFromPreferences()
         // Ensure the selected time is in the future
         if (calendar.before(Calendar.getInstance())) {
             Toast.makeText(requireContext(), "Cannot set alarm for past time!", Toast.LENGTH_SHORT).show()
@@ -247,7 +239,7 @@ class AlertFragment : Fragment() {
 
             viewModel.insertAlarm(AlarmData(alarmRequest,alarmTimeInMillis))
           //  updateRequestCode()
-            Toast.makeText(requireContext(), "Alarm Set Successfully! ${getRequestCodeFromPreferences()}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Alarm Set Successfully! ${viewModel.getAlertPrefs(ALERT_KEYS.ALARM_REQUEST_CODE,0)}", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "Failed to set alarm: ${e.message}", Toast.LENGTH_SHORT).show()
             Log.e("AlarmError", "Error setting alarm", e)
@@ -265,7 +257,7 @@ class AlertFragment : Fragment() {
 
 
     private fun showNotification(calendar: Calendar) {
-        val notificationRequest = getRequestCodeFromPreferences()
+        val notificationRequest =getRequestCodeFromPreferences()
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(requireContext(), AlarmReceiver::class.java)
 
@@ -290,7 +282,7 @@ class AlertFragment : Fragment() {
             pendingIntent
         )
 
-        Toast.makeText(requireContext(), "Notification Scheduled! ${getRequestCodeFromPreferences()}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Notification Scheduled! ${viewModel.getAlertPrefs(ALERT_KEYS.ALARM_REQUEST_CODE,0)}", Toast.LENGTH_SHORT).show()
     }
 
 
@@ -330,31 +322,20 @@ class AlertFragment : Fragment() {
 
 
     private fun getRequestCodeFromPreferences(): Int {
-        val sharedPrefs = requireActivity().getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE)
-        return sharedPrefs.getInt(requestCodeKey, 0) // Default value is 0
+     return  viewModel.getAlertPrefs(ALERT_KEYS.ALARM_REQUEST_CODE,0)
     }
-
-//    private fun saveRequestCodeToPreferences(requestCode: Int) {
-//        val sharedPrefs = requireActivity().getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE)
-//        with(sharedPrefs.edit()) {
-//            putInt(requestCodeKey, requestCode)
-//            apply() // Commit changes asynchronously
-//        }
-//    }
-
-    // Example function where you can modify the requestCode and save it
+//
+//
+//    // Example function where you can modify the requestCode and save it
     private fun updateRequestCode() {
 
         requestCode ++
 
-        val sharedPrefs = requireActivity().getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE)
-        with(sharedPrefs.edit()) {
-            putInt(requestCodeKey, requestCode)
-            apply() // Commit changes asynchronously
+        viewModel.addAlertPrefs(ALERT_KEYS.ALARM_REQUEST_CODE,requestCode)
         }
 
 
-    }
+
 
 
 

@@ -19,3 +19,6 @@ object LOCATION_KEYS {
     const val LATITUDE = "latitude"
     const val LONGITUDE = "longitude"
 }
+object ALERT_KEYS {
+    const val ALARM_REQUEST_CODE = "alarm_request_code"
+}

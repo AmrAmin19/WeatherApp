@@ -38,4 +38,7 @@ interface Irepo {
 
     fun AddLocationPrefs(key: String,value: Double)
     fun getLocationPrefs(key: String,default: Double):Double
+
+    fun AddAlertPrefs(key: String, value: Int)
+    fun getAlertPrefs(key: String,default: Int):Int
 }
