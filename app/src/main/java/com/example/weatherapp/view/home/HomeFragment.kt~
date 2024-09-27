@@ -190,15 +190,15 @@ class HomeFragment : Fragment() {
              }
         }
 
-//        viewLifecycleOwner.lifecycleScope.launch {
-//            mainViewModel.locationSettingsSharedData.collect{
-//
-//                when(it){
-//                    "gps"->communicator.getFreshLocation()
-//                    "map"->communicator.getMapLocation()
-//                }
-//            }
-//        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            mainViewModel.locationSettingsSharedData.collect{
+
+                when(it){
+                    "gps"->communicator.getFreshLocation()
+                    "map"->communicator.getMapLocation()
+                }
+            }
+        }
 
     }
 

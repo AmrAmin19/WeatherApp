@@ -143,9 +143,18 @@ class Repo private constructor(
     {
         sharedPreferences.AddsettingsPrefs(key,value)
     }
-    override fun getSettingsPrefs(key:String,Default:String):String
+    override fun getSettingsPrefs(key:String,default:String):String
     {
-        return sharedPreferences.getSettingsPrefs(key, Default)
+        return sharedPreferences.getSettingsPrefs(key, default)
+    }
+
+    override fun AddLocationPrefs(key: String,value: Double)
+    {
+        sharedPreferences.AddLocationPrefs(key, value)
+    }
+    override fun getLocationPrefs(key: String, default: Double): Double
+    {
+        return sharedPreferences.getLocationPrefs(key, default)
     }
 
 

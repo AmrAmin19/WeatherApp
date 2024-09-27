@@ -71,12 +71,11 @@ class SettingsFragment : Fragment() {
             when(checkedId){
                 binding.map.id ->{
                     viewModel.AddsettingsPrefs(SharedPreferencesKeys.Location_key,"map")
-                    mainViewModel.updateLocationShared()
                     val action = SettingsFragmentDirections.actionSettingsFragmentToMapFragment(MapArgs.SettingsFragment_Source)
                     findNavController().navigate(action)
                 }
                 else -> {viewModel.AddsettingsPrefs(SharedPreferencesKeys.Location_key,"gps")
-                    mainViewModel.updateLocationShared()
+                    mainViewModel.updateLocatio()
                 }
             }
 

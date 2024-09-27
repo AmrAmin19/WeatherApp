@@ -132,6 +132,13 @@ class MapViewModel(var repo:Irepo):ViewModel() {
         }
     }
 
+    fun AddLocationPrefs(key: String,value: Double)
+    {
+        repo.AddLocationPrefs(key,value)
+    }
+
+
+
 
 
 }

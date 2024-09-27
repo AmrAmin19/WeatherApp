@@ -19,7 +19,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentMapBinding
-import com.example.weatherapp.model.LOCATION_KEYS
 import com.example.weatherapp.model.MapArgs
 import com.example.weatherapp.model.Repo
 import com.example.weatherapp.model.SharedPreferencesKeys
@@ -181,8 +180,7 @@ class MapFragment : Fragment() {
                         latitude = lat
                         longitude = lon
                     })
-                    viewmodel.AddLocationPrefs(LOCATION_KEYS.LATITUDE, lat)
-                    viewmodel.AddLocationPrefs(LOCATION_KEYS.LONGITUDE, lon)
+                    viewmodel.AddLocationPrefs()
 
                     findNavController().popBackStack()
 

@@ -14,3 +14,8 @@ object MapArgs {
     const val FavFragment_Source = "favFragment"
     const val SettingsFragment_Source = "settingsFragment"
 }
+
+object LOCATION_KEYS {
+    const val LATITUDE = "latitude"
+    const val LONGITUDE = "longitude"
+}

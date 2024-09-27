@@ -1,2 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_name">تطبيق الطقس</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">مرحبا بكم في الفراغ</string>
+    <string name="home">الرئيسية</string>
+    <string name="favorites">المفضلة</string>
+    <string name="alert">تنبيه</string>
+    <string name="settings">الإعدادات</string>
+    <string name="open_drawer">فتح القائمة</string>
+    <string name="close_drawer">إغلاق القائمة</string>
+    <string name="city">باريس</string>
+    <string name="date">7 يونيو</string>
+    <string name="timeupdate">آخر تحديث: %1$s</string>
+    <string name="weather_icon">رمز الطقس</string>
+    <string name="weatherMood">صافي</string>
+    <string name="humadityValue">56%</string>
+    <string name="temprature">%1$s°%2$s</string>
+    <string name="humidity">الرطوبة</string>
+    <string name="windSpeed">%1$s %2$s</string>
+    <string name="wind">الرياح</string>
+    <string name="feelLikeTemp">22 °م</string>
+    <string name="feels_like">درجة الحرارة المحسوسة</string>
+    <string name="minMaxTemp">%1$s - %2$s</string>
+    <string name="stop">إيقاف</string>
+    <string name="go_to_weather">الطقس</string>
+    <string name="check_weather">تحقق من الطقس</string>
+    <string name="alarm">المنبه</string>
+    <string name="time">الوقت</string>
+    <string name="location">الموقع</string>
+    <string name="location_error">يرجى تفعيل الموقع الخاص بك</string>
+    <string name="gps">نظام تحديد المواقع</string>
+    <string name="map">الخريطة</string>
+    <string name="language">اللغة</string>
+    <string name="english">الإنجليزية</string>
+    <string name="arabic">العربية</string>
+    <string name="temperature">درجة الحرارة</string>
+    <string name="celsius">درجة مئوية</string>
+    <string name="kelvin">كلفن</string>
+    <string name="fahrenheit">فهرنهايت</string>
+    <string name="windspeed">سرعة الرياح</string>
+    <string name="mps">متر/ثانية</string>
+    <string name="mph">ميل/ساعة</string>
+    <string name="notification">الإشعارات</string>
+    <string name="enable">تفعيل</string>
+    <string name="disable">إيقاف</string>
+</resources>

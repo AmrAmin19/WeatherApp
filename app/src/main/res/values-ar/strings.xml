@@ -44,4 +44,8 @@
     <string name="notification">الإشعارات</string>
     <string name="enable">تفعيل</string>
     <string name="disable">إيقاف</string>
+    <string name="delete">حذف</string>
+    <string name="are_you_sure_you_want_to_delete">هل أنت متأكد أنك تريد الحذف؟</string>
+    <string name="ok">موافق</string>
+    <string name="cancel">إلغاء</string>
 </resources>

@@ -101,11 +101,11 @@ class FavFragment : Fragment() {
     }
 
     private fun showConfirmationDialog(favWeather: FavWeather) {
-        val show = AlertDialog.Builder(context)
-            .setTitle(getString(R.string.delete))
-            .setMessage(getString(R.string.are_you_sure_you_want_to_delete))
-            .setPositiveButton(getString(R.string.ok)) { _, _ -> favViewModel.delet(favWeather) }
-            .setNegativeButton(getString(R.string.cancel), null)
+        AlertDialog.Builder(context)
+            .setTitle("Delete")
+            .setMessage("Are you sure you want to delete?")
+            .setPositiveButton("OK") { _, _ ->  favViewModel.delet(favWeather) }
+            .setNegativeButton("Cancel", null)
             .show()
     }
 

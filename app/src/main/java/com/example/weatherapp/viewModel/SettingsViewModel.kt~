@@ -11,7 +11,7 @@ class SettingsViewModel(val repo:Irepo):ViewModel() {
     private val _sharedData = MutableStateFlow<List<String>>(emptyList())
     val sharedData : StateFlow<List<String>> = _sharedData
 
-    private val _langSharedData = MutableStateFlow<String>("en")
+    private val _langSharedData = MutableStateFlow<String>(emptyList())
     val langSharedData : StateFlow<String> = _langSharedData
 
 
@@ -35,6 +35,6 @@ class SettingsViewModel(val repo:Irepo):ViewModel() {
     }
 
     fun updateLanguage(){
-        _langSharedData.value = getSettingsPrefs(SharedPreferencesKeys.Language_key,"en")
+       getSettingsPrefs(SharedPreferencesKeys.Language_key,"en")
     }
 }
