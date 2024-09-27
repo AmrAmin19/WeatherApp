@@ -23,26 +23,33 @@ class RemoteData :IremoteData {
         emit(ApiState.Loading)  // Emit a loading state
 
         try {
-            // Call the suspend function to get the weather data
+
             val currentWeather = services.getCurrentWeather(lat, lon, lang)
 
-            // Emit the success state with the weather data
+
             emit(ApiState.Success(currentWeather))
         } catch (e: Exception) {
-            // Emit an error state with the exception message
+
             emit(ApiState.Error("Error fetching weather data: ${e.message ?: "Unknown Error"}"))
             Log.e("API Error", "Error fetching weather data: ${e.message}")
         }
     }
 
-    override suspend fun getForecastWeather(lat: Double,lon: Double, lang: String):WeatherResponse
-    {
-        Log.d("AmrTestCalls", "getForecastWeather: ")
-        return  services.getWeatherForecast(
-            lat = lat,
-            lon = lon,
-            lang = lang
-        )
+
+    override fun getForecastWeather(lat: Double, lon: Double, lang: String): Flow<ApiState<WeatherResponse>> = flow {
+        emit(ApiState.Loading)  // Emit a loading state
+
+        try {
+
+            val forecastWeather = services.getWeatherForecast(lat, lon, lang)
+
+
+            emit(ApiState.Success(forecastWeather))
+        } catch (e: Exception) {
+
+            emit(ApiState.Error("Error fetching forecast data: ${e.message ?: "Unknown Error"}"))
+            Log.e("API Error", "Error fetching forecast data: ${e.message}")
+        }
     }
 
     override suspend fun getLocationByName (name:String) : List<LocationResponce>

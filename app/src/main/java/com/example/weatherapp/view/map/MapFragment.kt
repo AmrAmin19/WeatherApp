@@ -19,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentMapBinding
+import com.example.weatherapp.model.ApiState
 import com.example.weatherapp.model.LOCATION_KEYS
 import com.example.weatherapp.model.MapArgs
 import com.example.weatherapp.model.Repo
@@ -30,6 +31,7 @@ import com.example.weatherapp.viewModel.MainActivityViewModel
 import com.example.weatherapp.viewModel.MainFactory
 import com.example.weatherapp.viewModel.MapFactory
 import com.example.weatherapp.viewModel.MapViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.osmdroid.config.Configuration
 import org.osmdroid.events.MapEventsReceiver
@@ -157,6 +159,22 @@ class MapFragment : Fragment() {
         {
             MapArgs.FavFragment_Source-> binding.btnOk.setImageResource(R.drawable.baseline_favorite_24)
             MapArgs.SettingsFragment_Source-> binding.btnOk.setImageResource(R.drawable.baseline_add_24)
+        }
+
+        lifecycleScope.launch {
+            viewmodel.forecastWeather.collect{
+                when(it){
+                    is ApiState.Error->{
+                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                    }
+                    is ApiState.Loading->{
+//                        Toast.makeText(requireContext(), "Loading", Toast.LENGTH_SHORT).show()
+                    }
+                    is ApiState.Success->{
+                        viewmodel.insretFavWeather(it.data)
+                    }
+                }
+            }
         }
 
 

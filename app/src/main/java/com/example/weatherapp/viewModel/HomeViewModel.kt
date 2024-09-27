@@ -1,8 +1,6 @@
 package com.example.weatherapp.viewModel
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.model.ApiState
@@ -11,14 +9,11 @@ import com.example.weatherapp.model.DailyForecast
 import com.example.weatherapp.model.HourlyForecast
 import com.example.weatherapp.model.Irepo
 import com.example.weatherapp.model.SharedPreferencesKeys
-import com.example.weatherapp.model.WeatherInfo
 import com.example.weatherapp.model.WeatherResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+
 
 class HomeViewModel(val repo :Irepo) : ViewModel() {
 
@@ -27,18 +22,15 @@ class HomeViewModel(val repo :Irepo) : ViewModel() {
     val currentWeatherState: StateFlow<ApiState<CurrentWeatherResponse>> = _currentWeatherState
 
 
-    private val _forecastWeather = MutableLiveData<WeatherResponse>()
-    val forecastWeather :LiveData<WeatherResponse>
-        get() = _forecastWeather
+    private val _forecastWeather = MutableStateFlow<ApiState<WeatherResponse>>(ApiState.Loading)
+    val forecastWeather : StateFlow<ApiState<WeatherResponse>> = _forecastWeather
 
-    private val _dailyForecast=MutableLiveData<List<DailyForecast>>()
-    val dailyForecast : LiveData<List<DailyForecast>>
-        get() = _dailyForecast
 
-    private val _hourlyForecast=MutableLiveData<List<HourlyForecast>>()
-    val hourlyForecast : LiveData<List<HourlyForecast>>
-        get() = _hourlyForecast
+    private val _dailyForecast=MutableStateFlow<List<DailyForecast>>(emptyList())
+    val dailyForecast : StateFlow<List<DailyForecast>> = _dailyForecast
 
+    private val _hourlyForecast=MutableStateFlow<List<HourlyForecast>>(emptyList())
+    val hourlyForecast : StateFlow<List<HourlyForecast>> = _hourlyForecast
 
 
     fun getSettings():Map<String,String>{
@@ -65,23 +57,28 @@ class HomeViewModel(val repo :Irepo) : ViewModel() {
         }
     }
 
+
+    fun changetToDaily(weatherResponse: WeatherResponse)
+    {
+        _dailyForecast.value= repo.getDailyForecasts(weatherResponse)
+    }
+
+    fun changetToHourly(weatherResponse: WeatherResponse){
+        _hourlyForecast.value =repo.getHourlyForecastForToday(weatherResponse)
+    }
+
     fun fetchForecastWeather(lat: Double,lon: Double)
     {
         viewModelScope.launch {
-            val fWeather=repo.getForecastWeather(lat,lon,getSettingsPrefs(SharedPreferencesKeys.Language_key,"en"))
-            val dailyWeather = repo.getDailyForecasts(fWeather)
-            val hourlyweather =repo.getHourlyForecastForToday(fWeather)
 
-            Log.d("AmrDataTest", "${hourlyweather.size}")
+            repo.getForecastWeather(lat,lon,getSettingsPrefs(SharedPreferencesKeys.Language_key,"en")).collect{
 
-           _dailyForecast.postValue(dailyWeather)
-            _forecastWeather.postValue(fWeather)
-            _hourlyForecast.postValue(hourlyweather)
+
+                _forecastWeather.value=it
+            }
 
         }
     }
-
-
 
 
 }

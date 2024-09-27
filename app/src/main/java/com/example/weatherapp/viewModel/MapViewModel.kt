@@ -4,9 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.weatherapp.model.ApiState
 import com.example.weatherapp.model.Irepo
 import com.example.weatherapp.model.LocationResponce
 import com.example.weatherapp.model.SharedPreferencesKeys
+import com.example.weatherapp.model.WeatherResponse
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,6 +27,9 @@ class MapViewModel(var repo:Irepo):ViewModel() {
 
     private val _filteredCities = MutableLiveData<List<String>>()
     val filteredCities: LiveData<List<String>> = _filteredCities
+
+    private val _forecastWeather = MutableStateFlow<ApiState<WeatherResponse>>(ApiState.Loading)
+    val forecastWeather : StateFlow<ApiState<WeatherResponse>> = _forecastWeather
 
 
     private val cityList = arrayListOf(
@@ -81,42 +86,28 @@ class MapViewModel(var repo:Irepo):ViewModel() {
         return repo.getSettingsPrefs(key,default)
     }
 
+    fun insretFavWeather(weatherResponse: WeatherResponse)
+    {
+        viewModelScope.launch {
+
+            val temp = repo.getFavWeather(weatherResponse)
+
+
+            val result=  repo.insert(temp)
+            _resultInsert.postValue(result)
+
+
+        }
+    }
+
 
     fun fetchDataFromApi(lat:Double,lon:Double)
     {
         viewModelScope.launch {
 
-//            try {
-//                // Fetch weather data concurrently
-//                val currentWeatherResponseDeferred =  async { repo.getCurrentWeather(lat, lon) }
-//                val weatherResponseDeferred = async { repo.getForecastWeather(lat, lon) }
-//
-//                val currentWeatherResponse = currentWeatherResponseDeferred.await()
-//                val weatherResponse = weatherResponseDeferred.await()
-//
-//                // Process and store the data
-//                val temp = repo.getCurrentWeatherLocal(weatherResponse, currentWeatherResponse)
-//
-//                // Insert processed data into the database
-//                repo.insert(temp)
-//
-//                // Update LiveData
-//                _currentWeather.postValue(temp)
-//
-//            } catch (e: Exception) {
-//                // Handle any exceptions, e.g., network or database issues
-//                Log.e("WeatherViewModel", "Error fetching weather data", e)
-//                // Optionally, post a fallback value or notify the UI of the error
-//            }
-
-            val weatherResponse= repo.getForecastWeather(lat,lon,getSettingsPrefs(
-                SharedPreferencesKeys.Language_key,"en"))
-
-            val temp = repo.getFavWeather(weatherResponse)
-
-
-          val result=  repo.insert(temp)
-            _resultInsert.postValue(result)
+                repo.getForecastWeather(lat,lon,getSettingsPrefs(SharedPreferencesKeys.Language_key,"en")).collect{
+                    _forecastWeather.value=it
+                }
 
 
         }

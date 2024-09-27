@@ -24,6 +24,7 @@ import com.example.weatherapp.model.CurrentWeatherResponse
 import com.example.weatherapp.model.NetworkUtils
 import com.example.weatherapp.model.Repo
 import com.example.weatherapp.model.SharedPreferencesKeys
+import com.example.weatherapp.model.WeatherResponse
 import com.example.weatherapp.model.local.SharedPreferences
 import com.example.weatherapp.model.remote.RemoteData
 import com.example.weatherapp.view.Communicator
@@ -138,21 +139,33 @@ class HomeFragment : Fragment() {
             }
         }
 
+        lifecycleScope.launch {
+            homeViewModel.forecastWeather.collect{
 
-        homeViewModel.forecastWeather.observe(viewLifecycleOwner, Observer {
+                when(it){
+                    is ApiState.Loading -> {
+                        showLoading(true)
+                    }
+                    is ApiState.Success<WeatherResponse> -> {
+                        showLoading(false)
+                        binding.locationText.text=it.data.city.name
+                        homeViewModel.changetToHourly(it.data)
+                        homeViewModel.changetToDaily(it.data)
 
-            showLoading(false)
+                    }
+                    is ApiState.Error -> {
+                        showLoading(false)
+                        Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
 
 
-            binding.locationText.text=it.city.name
+        lifecycleScope.launch {
+            homeViewModel.dailyForecast.collect{
 
-        })
-
-        homeViewModel.dailyForecast.observe(viewLifecycleOwner, Observer {
-
-            showLoading(false)
-
-           val dailyForecast = it.map {
+                val dailyForecast = it.map {
                     daily ->
                 daily.copy(
                     maxTemp = convertTemperature(daily.maxTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C"),
@@ -162,19 +175,19 @@ class HomeFragment : Fragment() {
 
             myAdapter.submitList(dailyForecast)
 
-        })
-
-        homeViewModel.hourlyForecast.observe(viewLifecycleOwner, Observer {
-
-            Log.d("AmrDataTes", "${it.size}  ")
-
-           val hourlyForecast = it.map {
-                hourly ->
-                hourly.copy(temp=convertTemperature(hourly.temp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C"))
             }
+        }
+        lifecycleScope.launch {
+            homeViewModel.hourlyForecast.collect{
+                val hourlyForecast = it.map {
+                        hourly ->
+                    hourly.copy(temp=convertTemperature(hourly.temp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C"))
+                }
 
-            hourAdabter.submitList(hourlyForecast)
-        })
+                hourAdabter.submitList(hourlyForecast)
+            }
+        }
+
 
         binding.swipeRefreshLayout.setOnRefreshListener {
              when(mainViewModel.getSettingsPrefs()){
