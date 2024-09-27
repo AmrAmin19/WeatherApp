@@ -33,6 +33,24 @@ class MapViewModel(var repo:Irepo):ViewModel() {
 
 
     private val cityList = arrayListOf(
+        "القاهرة", "الاسكندرية", "الجيزة", "شبرا الخيمة", "بورسعيد",
+        "السويس", "الأقصر", "أسيوط", "المنصورة", "طنطا",
+        "إسماعيلية", "الفيوم", "الزقازيق", "دمياط", "أسوان",
+        "المنيا", "بني سويف", "قنا", "سوهاج", "الغردقة",
+        "نيويورك", "لوس أنجلوس", "لندن", "باريس", "طوكيو",
+        "برلين", "موسكو", "سيدني", "تورنتو", "روما",
+        "مومباي", "بكين", "دبي", "مكسيكو سيتي", "بانكوك",
+        "بوينس آيرس", "إسطنبول", "سيول", "ساو باولو", "جاكرتا",
+        "كيب تاون", "مدريد", "فيينا", "برشلونة", "أثينا",
+        "لشبونة", "براغ", "وارسو", "أمستردام", "بروكسل",
+        "هونج كونج", "شنغهاي", "كوالا لامبور", "سنغافورة", "لاجوس",
+        "دبلن", "كوبنهاغن", "ستوكهولم", "هلسنكي", "أوسلو",
+        "فانكوفر", "ملبورن", "زيورخ", "جنيف", "إدنبرة",
+        "بريسبان", "كلكتا", "كراتشي", "الرياض", "تل أبيب",
+        "الدار البيضاء", "مانيلا", "ليما", "هافانا", "كييف",
+        "نايروبي", "هانوي", "فيينا", "بودابست", "ميونخ",
+        "البندقية", "فلورنسا", "سالفادور", "ريو دي جانيرو", "ليون",
+        "مرسيليا", "كراكوف", "كوبنهاغن", "مونتريال", "أوساكا",
         "Cairo", "Alexandria", "Giza", "Shubra El-Kheima", "Port Said",
         "Suez", "Luxor", "Asyut", "Mansoura", "Tanta",
         "Ismailia", "Faiyum", "Zagazig", "Damietta", "Aswan",
@@ -50,10 +68,29 @@ class MapViewModel(var repo:Irepo):ViewModel() {
         "Casablanca", "Manila", "Lima", "Havana", "Kyiv",
         "Nairobi", "Hanoi", "Vienna", "Budapest", "Munich",
         "Venice", "Florence", "Salvador", "Rio de Janeiro", "Lyon",
-        "Marseille", "Krakow", "Copenhagen", "Montreal", "Osaka",
-        "Bucharest", "Belgrade", "Sofia", "Ankara", "Tbilisi"
+        "Marseille", "Krakow", "Copenhagen", "Montreal", "Osaka"
     )
 
+//    private val cityList = arrayListOf(
+//        "Cairo", "Alexandria", "Giza", "Shubra El-Kheima", "Port Said",
+//        "Suez", "Luxor", "Asyut", "Mansoura", "Tanta",
+//        "Ismailia", "Faiyum", "Zagazig", "Damietta", "Aswan",
+//        "Minya", "Beni Suef", "Qena", "Sohag", "Hurghada",
+//        "New York", "Los Angeles", "London", "Paris", "Tokyo",
+//        "Berlin", "Moscow", "Sydney", "Toronto", "Rome",
+//        "Mumbai", "Beijing", "Dubai", "Mexico City", "Bangkok",
+//        "Buenos Aires", "Istanbul", "Seoul", "Sao Paulo", "Jakarta",
+//        "Cape Town", "Madrid", "Vienna", "Barcelona", "Athens",
+//        "Lisbon", "Prague", "Warsaw", "Amsterdam", "Brussels",
+//        "Hong Kong", "Shanghai", "Kuala Lumpur", "Singapore", "Lagos",
+//        "Dublin", "Copenhagen", "Stockholm", "Helsinki", "Oslo",
+//        "Vancouver", "Melbourne", "Zurich", "Geneva", "Edinburgh",
+//        "Brisbane", "Kolkata", "Karachi", "Riyadh", "Tel Aviv",
+//        "Casablanca", "Manila", "Lima", "Havana", "Kyiv",
+//        "Nairobi", "Hanoi", "Vienna", "Budapest", "Munich",
+//        "Venice", "Florence", "Salvador", "Rio de Janeiro", "Lyon",
+//        "Marseille", "Krakow", "Copenhagen", "Montreal", "Osaka",
+//    )
 
 
     private val searchFlow = MutableSharedFlow<String>(replay = 1)
