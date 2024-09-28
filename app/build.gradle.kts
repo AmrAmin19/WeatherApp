@@ -85,30 +85,6 @@ dependencies {
     implementation ("com.squareup.okhttp3:okhttp:4.9.3")
 
 
-//    // JUnit testing framework
-//    testImplementation("junit:junit:4.13.2")
-//
-//    // Coroutines test for handling suspend functions
-//    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
-//
-//    // Hilt for dependency injection in testing
-//    androidTestImplementation("com.google.dagger:hilt-android-testing:2.44")
-//    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.44")
-//
-//    // Mockito for mocking objects
-//    testImplementation("org.mockito:mockito-core:3.12.4")
-//
-//    // MockK for mocking Kotlin classes
-//    testImplementation("io.mockk:mockk:1.12.0")
-//
-//    // Truth for better assertions
-//    testImplementation("com.google.truth:truth:1.1.3")
-//
-//    // Robolectric for testing
-//    testImplementation ("org.robolectric:robolectric:4.9")
-//    implementation ("com.jakewharton.timber:timber:5.0.1")
-//    testImplementation ("org.mockito:mockito-inline:4.6.1")
-
 
 
 
