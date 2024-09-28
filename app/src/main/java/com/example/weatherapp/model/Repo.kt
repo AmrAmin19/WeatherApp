@@ -61,7 +61,7 @@ class Repo private constructor(
             emit(locationList.first())
         } catch (e: Exception) {
             // Handle error
-            Log.e("API Error", "Error fetching location data: ${e.message}")
+          //  Log.e("API Error", "Error fetching location data: ${e.message}")
             // Optionally, emit an empty list or handle the error appropriately
             emit(LocationResponce(" ${e.message}",0.0,0.0))
         }
