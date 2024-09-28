@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity(),Communicator {
         } else {
             binding.main.layoutDirection = View.LAYOUT_DIRECTION_LTR
         }
-//        binding.main
+        binding.main
 
 
         navController.addOnDestinationChangedListener { _, destination, _ ->

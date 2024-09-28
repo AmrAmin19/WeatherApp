@@ -113,7 +113,19 @@ dependencies {
     testImplementation ("androidx.arch.core:core-testing:2.1.0")
 
     //kotlinx-coroutines
-    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3") // Same version as coroutines-core
+
+
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3") // Latest stable version as of 2024
+
+
+    testImplementation ("org.mockito.kotlin:mockito-kotlin:4.0.0")
+
+    testImplementation ("io.mockk:mockk:1.13.5")
+
+    testImplementation ("org.mockito:mockito-core:5.0.0")
+
+    testImplementation ("app.cash.turbine:turbine:1.0.0")
 
 
 
