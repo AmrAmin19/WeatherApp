@@ -127,6 +127,8 @@ dependencies {
 
     testImplementation ("app.cash.turbine:turbine:1.0.0")
 
+        //lottie
+    implementation ("com.airbnb.android:lottie:6.0.1")
 
 
 

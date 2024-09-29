@@ -36,7 +36,7 @@ class HomeViewModel(val repo :Irepo) : ViewModel() {
     private val _localCurrentWeather = MutableStateFlow<List<CurrentWeather>>(emptyList())
     val localCurrentWeather: StateFlow<List<CurrentWeather>> = _localCurrentWeather
 
-
+    
 
     fun getSettings():Map<String,String>{
         return mapOf(
@@ -89,6 +89,7 @@ class HomeViewModel(val repo :Irepo) : ViewModel() {
        viewModelScope.launch {
            repo.deleteAllCurrentWeather()
            repo.insertCurrentWeather(repo.getCurrentWeatherLocal(weatherResponse,currentWeatherResponse))
+
        }
     }
 
@@ -100,6 +101,8 @@ class HomeViewModel(val repo :Irepo) : ViewModel() {
             }
         }
     }
+
+
 
 
 }

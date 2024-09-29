@@ -123,6 +123,8 @@ class HomeFragment : Fragment() {
 
 
 
+
+
         lifecycleScope.launch {
             homeViewModel.currentWeatherState.collect{ resource ->
                 when (resource) {
@@ -234,9 +236,12 @@ class HomeFragment : Fragment() {
 
         Log.d("AmrDataTest", "${currentWeather.weather[0].icon} ")
 
-        Glide.with(requireContext())
-            .load("https://openweathermap.org/img/wn/${currentWeather.weather[0].icon}@2x.png")
-            .into(binding.weatherIcon)
+        binding.weatherIcon.setAnimation(getWeatherIconResource(currentWeather.weather[0].id))
+        binding.weatherIcon.playAnimation()
+
+//        Glide.with(requireContext())
+//            .load("https://openweathermap.org/img/wn/${currentWeather.weather[0].icon}@2x.png")
+//            .into(binding.weatherIcon)
 
 
         binding.weatherCondition.text=currentWeather.weather[0].description
@@ -259,9 +264,13 @@ class HomeFragment : Fragment() {
         binding.updatedTime.text=getString(R.string.timeupdate,convertTimestampToTime(currentWeather.dt))
         binding.dateText.text=convertTimestampToDate(currentWeather.dt)
 
-        Glide.with(requireContext())
-            .load("https://openweathermap.org/img/wn/${currentWeather.icon}@2x.png")
-            .into(binding.weatherIcon)
+        binding.weatherIcon.setAnimation(getWeatherIconResource(currentWeather.id))
+        binding.weatherIcon.playAnimation()
+
+
+//        Glide.with(requireContext())
+//            .load("https://openweathermap.org/img/wn/${currentWeather.icon}@2x.png")
+//            .into(binding.weatherIcon)
 
 
         binding.weatherCondition.text=currentWeather.weatherCondition
@@ -293,6 +302,8 @@ class HomeFragment : Fragment() {
 
 
 
+
+
     fun convertTimestampToDate(timestamp: Long): String {
 
         val date = Date(timestamp * 1000) // Convert seconds to milliseconds
@@ -317,6 +328,7 @@ class HomeFragment : Fragment() {
             Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show()
             homeViewModel.getlocalWeatherData()
           //  createLocalData()
+
             return  // Exit the flow if there's no connection
         }
 
@@ -377,28 +389,19 @@ class HomeFragment : Fragment() {
 
     }
 
-//    fun String.toArabic(context: Context): String {
-//
-//
-//        // Check if the language is Arabic
-//        val locale = context.resources.configuration.locales[0]
-//        if (locale.language == "ar") {
-//            return this
-//                .replace("1", "١")
-//                .replace("2", "٢")
-//                .replace("3", "٣")
-//                .replace("4", "٤")
-//                .replace("5", "٥")
-//                .replace("6", "٦")
-//                .replace("7", "٧")
-//                .replace("8", "٨")
-//                .replace("9", "٩")
-//                .replace("0", "٠")
-//        } else {
-//            // Return the number as it is for other languages
-//            return this
-//        }
-//    }
+
+    fun getWeatherIconResource(weatherId: Int): Int {
+        return when (weatherId) {
+            in 200..232 -> R.raw.thunder_storm // Thunderstorm group
+            in 300..321 -> R.raw.drizzel      // Drizzle group
+            in 500..531 -> R.raw.rain         // Rain group
+            in 600..622 -> R.raw.snow         // Snow group
+            in 701..781 -> R.raw.mist   // Mist, smoke, haze, etc.
+            800 -> R.raw.clear_sky            // Clear sky
+            in 801..804 -> R.raw.clouds      // Cloudy group
+            else -> R.raw.unknowen             // Default icon for unknown weather
+        }
+    }
 
 
 }
