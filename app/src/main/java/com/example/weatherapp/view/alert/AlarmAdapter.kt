@@ -21,7 +21,9 @@ class AlarmDiff:DiffUtil.ItemCallback<AlarmData>(){
     }
 }
 
-class AlarmAdapter :ListAdapter<AlarmData,AlarmAdapter.AlarmViewHolder>(AlarmDiff())
+class AlarmAdapter(
+    val myListenner: (AlarmData) -> Unit
+) :ListAdapter<AlarmData,AlarmAdapter.AlarmViewHolder>(AlarmDiff())
 {
 
     lateinit var binding:AlarmItemBinding
@@ -36,6 +38,9 @@ class AlarmAdapter :ListAdapter<AlarmData,AlarmAdapter.AlarmViewHolder>(AlarmDif
     override fun onBindViewHolder(holder: AlarmViewHolder, position: Int) {
        val currentAlarm =getItem(position)
        holder.binding.cityName.text=convertMilliSecondsToTime(currentAlarm.time,"hh mm")
+        holder.binding.deletIcon.setOnClickListener {
+            myListenner.invoke(currentAlarm)
+        }
     }
 
     fun convertMilliSecondsToTime(milliSeconds: Long, pattern: String): String

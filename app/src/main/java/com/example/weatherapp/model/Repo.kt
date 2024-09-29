@@ -71,27 +71,27 @@ class Repo private constructor(
 
     // Local
 
-//  override  fun getCurrentWeatherLocal(weatherResponse: WeatherResponse,currentWeatherResponse: CurrentWeatherResponse):CurrentWeather
-//    {
-//        val currentWeather = CurrentWeather(
-//            id = currentWeatherResponse.id,
-//            lon = currentWeatherResponse.coord.lon,
-//            lat = currentWeatherResponse.coord.lat,
-//            weatherCondition = currentWeatherResponse.weather[0].main,
-//            dt = currentWeatherResponse.dt,
-//            city = weatherResponse.city.name,
-//            icon = currentWeatherResponse.weather[0].icon,
-//            temp = currentWeatherResponse.main.temp,
-//            speed = currentWeatherResponse.wind.speed,
-//            humidity = currentWeatherResponse.main.humidity,
-//            feels_like = currentWeatherResponse.main.feels_like,
-//            hourlyForecast = remoteData.getHourlyForecastForToday(weatherResponse),
-//            dailyForecast = remoteData.getDailyForecasts(weatherResponse),
-//            clouds = currentWeatherResponse.clouds.all,
-//            pressure = currentWeatherResponse.main.pressure
-//        )
-//        return currentWeather
-//    }
+  override  fun getCurrentWeatherLocal(weatherResponse: WeatherResponse,currentWeatherResponse: CurrentWeatherResponse):CurrentWeather
+    {
+        val currentWeather = CurrentWeather(
+            id = currentWeatherResponse.id,
+            lon = currentWeatherResponse.coord.lon,
+            lat = currentWeatherResponse.coord.lat,
+            weatherCondition = currentWeatherResponse.weather[0].main,
+            dt = currentWeatherResponse.dt,
+            city = weatherResponse.city.name,
+            icon = currentWeatherResponse.weather[0].icon,
+            temp = currentWeatherResponse.main.temp,
+            speed = currentWeatherResponse.wind.speed,
+            humidity = currentWeatherResponse.main.humidity,
+            feels_like = currentWeatherResponse.main.feels_like,
+            hourlyForecast = remoteData.getHourlyForecastForToday(weatherResponse),
+            dailyForecast = remoteData.getDailyForecasts(weatherResponse),
+            clouds = currentWeatherResponse.clouds.all,
+            pressure = currentWeatherResponse.main.pressure
+        )
+        return currentWeather
+    }
 
    override fun getFavWeather(weatherResponse: WeatherResponse):FavWeather
     {
@@ -132,6 +132,24 @@ class Repo private constructor(
 
     override suspend fun deleteOldAlarms(currentTimeMillis: Long) {
       localData.deleteOldAlarms(currentTimeMillis)
+    }
+
+
+
+    override fun getLocalCurrentWeather(): Flow<List<CurrentWeather>> {
+       return localData.getCurrentWeather()
+    }
+
+    override suspend fun insertCurrentWeather(currentWeather: CurrentWeather) {
+        localData.insertCurrentWeather(currentWeather)
+    }
+
+    override suspend fun deleteCurrentWeather(currentWeather: CurrentWeather) {
+        localData.deleteCurrentWeather(currentWeather)
+    }
+
+    override suspend fun deleteAllCurrentWeather() {
+        localData.deleteAllCurrentWeather()
     }
 
 

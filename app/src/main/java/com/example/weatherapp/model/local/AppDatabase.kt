@@ -11,8 +11,8 @@ import com.example.weatherapp.model.CurrentWeather
 import com.example.weatherapp.model.CurrentWeatherResponse
 import com.example.weatherapp.model.FavWeather
 
-@Database(entities = [FavWeather::class,AlarmData::class], version = 1)
-//@TypeConverters(HourlyForecastConverter::class, DailyForecastConverter::class)
+@Database(entities = [FavWeather::class,AlarmData::class,CurrentWeather::class], version = 1)
+@TypeConverters(HourlyForecastConverter::class, DailyForecastConverter::class)
 abstract class AppDatabase:RoomDatabase() {
     abstract fun getWeatherDao() : WeatherDAO
 

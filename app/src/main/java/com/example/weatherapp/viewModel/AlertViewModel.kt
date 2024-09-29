@@ -55,6 +55,12 @@ class AlertViewModel(val repo :Irepo) :ViewModel() {
            repo.insertAlarmData(alarmData)
         }
     }
+    fun deleteAlarm(alarmData: AlarmData)
+    {
+        viewModelScope.launch {
+            repo.deletAlarm(alarmData)
+        }
+    }
 
     fun deleteOldAlarms(currentTimeMillis: Long)
     {

@@ -15,5 +15,11 @@ interface IlocalData {
     suspend fun insertAlarmData(alarmData: AlarmData)
     suspend fun deletAlarm(alarmData: AlarmData)
 
+
+    fun getCurrentWeather() : Flow<List<CurrentWeather>>
+    suspend fun insertCurrentWeather(currentWeather: CurrentWeather)
+    suspend fun deleteCurrentWeather(currentWeather: CurrentWeather)
+    suspend fun deleteAllCurrentWeather()
+
     suspend fun deleteOldAlarms(currentTimeMillis: Long)
 }

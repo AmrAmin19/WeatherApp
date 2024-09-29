@@ -132,13 +132,13 @@ data class HourlyForecast(
     val icon: String
 )
 
-//@Entity(tableName = "current_weather_table")
+@Entity(tableName = "current_weather_table")
 data class CurrentWeather(
     val id: Int,
-     val lat: Double,
+    val lat: Double,
     val lon: Double,
     val weatherCondition:String,
-    val city:String,
+   @PrimaryKey val city:String,
     val dt: Long,
     val icon : String,
     val temp: Double,
@@ -147,8 +147,8 @@ data class CurrentWeather(
     val speed: Double,
     val clouds: Int,
     val pressure:Int,
-//    @TypeConverters(HourlyForecastConverter::class) val hourlyForecast: List<HourlyForecast>,
-//    @TypeConverters(DailyForecastConverter::class) val dailyForecast: List<DailyForecast>
+    @TypeConverters(HourlyForecastConverter::class) val hourlyForecast: List<HourlyForecast>,
+    @TypeConverters(DailyForecastConverter::class) val dailyForecast: List<DailyForecast>
 )
 
 @Entity(tableName = "fav_weather")

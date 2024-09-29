@@ -94,7 +94,10 @@ class AlertFragment : Fragment() {
 
          notificationSharedPreferences =viewModel.getSettingsPrefs(SharedPreferencesKeys.Notification_key,"enable")
 
-        myAdapter=AlarmAdapter()
+        myAdapter=AlarmAdapter(){
+            deleteAlarm(requireContext(),it)
+
+        }
         binding.AlarmRecycelView.layoutManager= LinearLayoutManager(context)
         binding.AlarmRecycelView.adapter=myAdapter
 
@@ -336,8 +339,28 @@ class AlertFragment : Fragment() {
 
 
 
+    fun deleteAlarm(context: Context, alarmData: AlarmData) {
 
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val alarmRequestCode = alarmData.requestCode
 
+        val intent = Intent(context, AlarmReceiver::class.java).apply {
+            action = "Alarm.Action"
+        }
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            alarmRequestCode,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        alarmManager.cancel(pendingIntent)
+
+        pendingIntent.cancel()
+
+        viewModel.deleteAlarm(alarmData)
+        }
 
 
 }

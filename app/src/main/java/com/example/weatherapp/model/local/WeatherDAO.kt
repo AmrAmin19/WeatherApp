@@ -36,4 +36,13 @@ interface WeatherDAO {
     @Query("DELETE FROM alarm_table WHERE time < :currentTimeMillis")
     suspend fun deleteOldAlarms(currentTimeMillis: Long)
 
+    @Query("SELECT * FROM current_weather_table")
+    fun getCurrentWeather(): Flow<List<CurrentWeather>>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCurrentWeather(currentWeather: CurrentWeather)
+    @Delete
+    suspend fun deleteCurrentWeather(currentWeather: CurrentWeather)
+    @Query("DELETE FROM current_weather_table")
+    suspend fun deleteAllCurrentWeather()
+
 }

@@ -119,6 +119,8 @@ class HomeFragment : Fragment() {
        })
 
 
+
+
         lifecycleScope.launch {
             homeViewModel.currentWeatherState.collect{ resource ->
                 when (resource) {
@@ -127,6 +129,8 @@ class HomeFragment : Fragment() {
                     }
                     is ApiState.Success<CurrentWeatherResponse> -> {
                         showLoading(false)
+
+                        getForeCastWeather(resource.data)
 
                         createUi(resource.data)
                     }
@@ -139,6 +143,31 @@ class HomeFragment : Fragment() {
             }
         }
 
+
+        lifecycleScope.launch {
+            homeViewModel.localCurrentWeather.collect{
+
+                if (it.isNotEmpty()){
+                    updateUiWithLocalData(it.first())
+                    showLoading(false)
+                }
+            }
+        }
+
+
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+             when(mainViewModel.getSettingsPrefs()){
+                 "gps"->communicator.getFreshLocation()
+                 "map"->communicator.getMapLocation()
+             }
+        }
+
+    }
+
+
+    fun getForeCastWeather(currentWeather: CurrentWeatherResponse){
+
         lifecycleScope.launch {
             homeViewModel.forecastWeather.collect{
 
@@ -148,6 +177,9 @@ class HomeFragment : Fragment() {
                     }
                     is ApiState.Success<WeatherResponse> -> {
                         showLoading(false)
+
+                        homeViewModel.changeToCurrent(it.data,currentWeather)
+
                         binding.locationText.text=it.data.city.name
                         homeViewModel.changetToHourly(it.data)
                         homeViewModel.changetToDaily(it.data)
@@ -166,14 +198,14 @@ class HomeFragment : Fragment() {
             homeViewModel.dailyForecast.collect{
 
                 val dailyForecast = it.map {
-                    daily ->
-                daily.copy(
-                    maxTemp = convertTemperature(daily.maxTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C"),
-                    minTemp = convertTemperature(daily.minTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C")
-                )
-            }
+                        daily ->
+                    daily.copy(
+                        maxTemp = convertTemperature(daily.maxTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C"),
+                        minTemp = convertTemperature(daily.minTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C")
+                    )
+                }
 
-            myAdapter.submitList(dailyForecast)
+                myAdapter.submitList(dailyForecast)
 
             }
         }
@@ -188,15 +220,8 @@ class HomeFragment : Fragment() {
             }
         }
 
-
-        binding.swipeRefreshLayout.setOnRefreshListener {
-             when(mainViewModel.getSettingsPrefs()){
-                 "gps"->communicator.getFreshLocation()
-                 "map"->communicator.getMapLocation()
-             }
-        }
-
     }
+
 
 
     fun createUi(currentWeather:CurrentWeatherResponse)
@@ -221,6 +246,45 @@ class HomeFragment : Fragment() {
         binding.windVal.text=convertWindSpeed(currentWeather.wind.speed,settings[SharedPreferencesKeys.Speed_key]?:"mps")
         binding.fellLikeVal.text=convertTemperature(currentWeather.main.feels_like,settings[SharedPreferencesKeys.Temprature_key]?:"C")
 
+
+
+
+    }
+
+    fun updateUiWithLocalData(currentWeather: CurrentWeather)
+    {
+
+        binding.updatedTime.text=getString(R.string.timeupdate,convertTimestampToTime(currentWeather.dt))
+        binding.dateText.text=convertTimestampToDate(currentWeather.dt)
+
+        Glide.with(requireContext())
+            .load("https://openweathermap.org/img/wn/${currentWeather.icon}@2x.png")
+            .into(binding.weatherIcon)
+
+
+        binding.weatherCondition.text=currentWeather.weatherCondition
+        binding.temperatureText.text=convertTemperature(currentWeather.temp,settings[SharedPreferencesKeys.Temprature_key]?:"C")
+
+        binding.humadityVal.text=currentWeather.humidity.toString()
+        binding.windVal.text=convertWindSpeed(currentWeather.speed,settings[SharedPreferencesKeys.Speed_key]?:"mps")
+        binding.fellLikeVal.text=convertTemperature(currentWeather.feels_like,settings[SharedPreferencesKeys.Temprature_key]?:"C")
+
+        val hourlyForecast = currentWeather.hourlyForecast.map {
+                hourly ->
+            hourly.copy(temp=convertTemperature(hourly.temp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C"))
+        }
+
+        hourAdabter.submitList(hourlyForecast)
+
+        val dailyForecast = currentWeather.dailyForecast.map {
+                daily ->
+            daily.copy(
+                maxTemp = convertTemperature(daily.maxTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C"),
+                minTemp = convertTemperature(daily.minTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C")
+            )
+        }
+
+        myAdapter.submitList(dailyForecast)
 
     }
 
@@ -249,6 +313,8 @@ class HomeFragment : Fragment() {
 
         if (!NetworkUtils.isInternetAvailable(requireContext())) {
             Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show()
+            homeViewModel.getlocalWeatherData()
+          //  createLocalData()
             return  // Exit the flow if there's no connection
         }
 

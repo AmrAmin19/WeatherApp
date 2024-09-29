@@ -42,5 +42,20 @@ class LocalData(context : Context) :IlocalData {
        dao.deleteOldAlarms(currentTimeMillis)
     }
 
+    override fun getCurrentWeather(): Flow<List<CurrentWeather>> {
+        return dao.getCurrentWeather()
+    }
+
+    override suspend fun insertCurrentWeather(currentWeather: CurrentWeather) {
+        dao.insertCurrentWeather(currentWeather)
+    }
+
+    override suspend fun deleteCurrentWeather(currentWeather: CurrentWeather) {
+        dao.deleteCurrentWeather(currentWeather)
+    }
+
+    override suspend fun deleteAllCurrentWeather() {
+        dao.deleteAllCurrentWeather()
+    }
 
 }

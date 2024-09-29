@@ -23,6 +23,14 @@ class MainActivityViewModel (val repo: Irepo) : ViewModel() {
     val locationLiveData: LiveData<Location>
         get() = _locationLiveData
 
+//    private val _locationLiveData = MutableStateFlow<Location>(Location("").apply {
+//        latitude=0.0
+//        longitude=0.0
+//    })
+//    val locationLiveData: StateFlow<Location>
+//        get() = _locationLiveData
+
+
     private val _favlocationLiveData = MutableLiveData<Pair<Double, Double>>()
     val favlocationLiveData: LiveData<Pair<Double, Double>>
         get() = _favlocationLiveData
