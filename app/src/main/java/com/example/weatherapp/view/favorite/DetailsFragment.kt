@@ -25,6 +25,7 @@ import com.example.weatherapp.model.WeatherResponse
 import com.example.weatherapp.model.local.LocalData
 import com.example.weatherapp.model.local.SharedPreferences
 import com.example.weatherapp.model.remote.RemoteData
+import com.example.weatherapp.model.toArabic
 import com.example.weatherapp.view.home.DailyForcastAdapter
 import com.example.weatherapp.view.home.HourlyForcastAdabter
 import com.example.weatherapp.viewModel.HomeFactory
@@ -138,8 +139,8 @@ class DetailsFragment : Fragment() {
                 val dailyForecast = it.map {
                         daily ->
                     daily.copy(
-                        maxTemp = convertTemperature(daily.maxTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C"),
-                        minTemp = convertTemperature(daily.minTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C")
+                        maxTemp = convertTemperature(daily.maxTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C").toArabic(requireContext()),
+                        minTemp = convertTemperature(daily.minTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C").toArabic(requireContext())
                     )
                 }
 
@@ -151,7 +152,7 @@ class DetailsFragment : Fragment() {
             viewModel.hourlyForecast.collect{
                 val hourlyForecast = it.map {
                         hourly ->
-                    hourly.copy(temp=convertTemperature(hourly.temp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C"))
+                    hourly.copy(temp=convertTemperature(hourly.temp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C").toArabic(requireContext()))
                 }
 
                 hourAdabter.submitList(hourlyForecast)
@@ -176,11 +177,11 @@ class DetailsFragment : Fragment() {
        binding.weatherCondition.text=currentWeather.weather[0].description
 
        // binding.temperatureText.text=it.main.temp.toInt().toString()
-       binding.temperatureText.text=convertTemperature(currentWeather.main.temp,settings[SharedPreferencesKeys.Temprature_key]?:"C")
+       binding.temperatureText.text=convertTemperature(currentWeather.main.temp,settings[SharedPreferencesKeys.Temprature_key]?:"C").toArabic(requireContext())
 
-       binding.humadityVal.text=currentWeather.main.humidity.toString()
-       binding.windVal.text=convertWindSpeed(currentWeather.wind.speed,settings[SharedPreferencesKeys.Speed_key]?:"mps")
-       binding.fellLikeVal.text=convertTemperature(currentWeather.main.feels_like,settings[SharedPreferencesKeys.Temprature_key]?:"C")
+       binding.humadityVal.text=currentWeather.main.humidity.toString().toArabic(requireContext())
+       binding.windVal.text=convertWindSpeed(currentWeather.wind.speed,settings[SharedPreferencesKeys.Speed_key]?:"mps").toArabic(requireContext())
+       binding.fellLikeVal.text=convertTemperature(currentWeather.main.feels_like,settings[SharedPreferencesKeys.Temprature_key]?:"C").toArabic(requireContext())
 
 
    }

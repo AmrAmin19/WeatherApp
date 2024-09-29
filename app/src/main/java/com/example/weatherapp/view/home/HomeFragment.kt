@@ -2,6 +2,7 @@ package com.example.weatherapp.view.home
 
 
 
+import android.content.Context
 import com.example.weatherapp.model.local.LocalData
 import android.os.Bundle
 import android.util.Log
@@ -27,6 +28,7 @@ import com.example.weatherapp.model.SharedPreferencesKeys
 import com.example.weatherapp.model.WeatherResponse
 import com.example.weatherapp.model.local.SharedPreferences
 import com.example.weatherapp.model.remote.RemoteData
+import com.example.weatherapp.model.toArabic
 import com.example.weatherapp.view.Communicator
 import com.example.weatherapp.viewModel.HomeFactory
 import com.example.weatherapp.viewModel.HomeViewModel
@@ -200,8 +202,8 @@ class HomeFragment : Fragment() {
                 val dailyForecast = it.map {
                         daily ->
                     daily.copy(
-                        maxTemp = convertTemperature(daily.maxTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C"),
-                        minTemp = convertTemperature(daily.minTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C")
+                        maxTemp = convertTemperature(daily.maxTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C").toArabic(requireContext()),
+                        minTemp = convertTemperature(daily.minTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C").toArabic(requireContext())
                     )
                 }
 
@@ -213,7 +215,7 @@ class HomeFragment : Fragment() {
             homeViewModel.hourlyForecast.collect{
                 val hourlyForecast = it.map {
                         hourly ->
-                    hourly.copy(temp=convertTemperature(hourly.temp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C"))
+                    hourly.copy(temp=convertTemperature(hourly.temp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C").toArabic(requireContext()))
                 }
 
                 hourAdabter.submitList(hourlyForecast)
@@ -240,11 +242,11 @@ class HomeFragment : Fragment() {
         binding.weatherCondition.text=currentWeather.weather[0].description
 
         // binding.temperatureText.text=it.main.temp.toInt().toString()
-        binding.temperatureText.text=convertTemperature(currentWeather.main.temp,settings[SharedPreferencesKeys.Temprature_key]?:"C")
+        binding.temperatureText.text=convertTemperature(currentWeather.main.temp,settings[SharedPreferencesKeys.Temprature_key]?:"C").toArabic(requireContext())
 
-        binding.humadityVal.text=currentWeather.main.humidity.toString()
-        binding.windVal.text=convertWindSpeed(currentWeather.wind.speed,settings[SharedPreferencesKeys.Speed_key]?:"mps")
-        binding.fellLikeVal.text=convertTemperature(currentWeather.main.feels_like,settings[SharedPreferencesKeys.Temprature_key]?:"C")
+        binding.humadityVal.text=currentWeather.main.humidity.toString().toArabic(requireContext())
+        binding.windVal.text=convertWindSpeed(currentWeather.wind.speed,settings[SharedPreferencesKeys.Speed_key]?:"mps").toArabic(requireContext())
+        binding.fellLikeVal.text=convertTemperature(currentWeather.main.feels_like,settings[SharedPreferencesKeys.Temprature_key]?:"C").toArabic(requireContext())
 
 
 
@@ -263,15 +265,15 @@ class HomeFragment : Fragment() {
 
 
         binding.weatherCondition.text=currentWeather.weatherCondition
-        binding.temperatureText.text=convertTemperature(currentWeather.temp,settings[SharedPreferencesKeys.Temprature_key]?:"C")
+        binding.temperatureText.text=convertTemperature(currentWeather.temp,settings[SharedPreferencesKeys.Temprature_key]?:"C").toArabic(requireContext())
 
-        binding.humadityVal.text=currentWeather.humidity.toString()
-        binding.windVal.text=convertWindSpeed(currentWeather.speed,settings[SharedPreferencesKeys.Speed_key]?:"mps")
-        binding.fellLikeVal.text=convertTemperature(currentWeather.feels_like,settings[SharedPreferencesKeys.Temprature_key]?:"C")
+        binding.humadityVal.text=currentWeather.humidity.toString().toArabic(requireContext())
+        binding.windVal.text=convertWindSpeed(currentWeather.speed,settings[SharedPreferencesKeys.Speed_key]?:"mps").toArabic(requireContext())
+        binding.fellLikeVal.text=convertTemperature(currentWeather.feels_like,settings[SharedPreferencesKeys.Temprature_key]?:"C").toArabic(requireContext())
 
         val hourlyForecast = currentWeather.hourlyForecast.map {
                 hourly ->
-            hourly.copy(temp=convertTemperature(hourly.temp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C"))
+            hourly.copy(temp=convertTemperature(hourly.temp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C").toArabic(requireContext()))
         }
 
         hourAdabter.submitList(hourlyForecast)
@@ -279,8 +281,8 @@ class HomeFragment : Fragment() {
         val dailyForecast = currentWeather.dailyForecast.map {
                 daily ->
             daily.copy(
-                maxTemp = convertTemperature(daily.maxTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C"),
-                minTemp = convertTemperature(daily.minTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C")
+                maxTemp = convertTemperature(daily.maxTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C").toArabic(requireContext()),
+                minTemp = convertTemperature(daily.minTemp.toDouble(), settings[SharedPreferencesKeys.Temprature_key]?:"C").toArabic(requireContext())
             )
         }
 
@@ -374,4 +376,29 @@ class HomeFragment : Fragment() {
         }
 
     }
+
+//    fun String.toArabic(context: Context): String {
+//
+//
+//        // Check if the language is Arabic
+//        val locale = context.resources.configuration.locales[0]
+//        if (locale.language == "ar") {
+//            return this
+//                .replace("1", "١")
+//                .replace("2", "٢")
+//                .replace("3", "٣")
+//                .replace("4", "٤")
+//                .replace("5", "٥")
+//                .replace("6", "٦")
+//                .replace("7", "٧")
+//                .replace("8", "٨")
+//                .replace("9", "٩")
+//                .replace("0", "٠")
+//        } else {
+//            // Return the number as it is for other languages
+//            return this
+//        }
+//    }
+
+
 }
