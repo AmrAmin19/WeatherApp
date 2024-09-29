@@ -151,9 +151,20 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             homeViewModel.localCurrentWeather.collect{
 
-                if (it.isNotEmpty()){
-                    updateUiWithLocalData(it.first())
+//
+//                if (it.isNotEmpty()){
+//                    updateUiWithLocalData(it.first())
+//                    showLoading(false)
+//
+//                }
+
+                if (it.isNotEmpty()&&!NetworkUtils.isInternetAvailable(requireContext())){
+
+
                     showLoading(false)
+                    updateUiWithLocalData(it.first())
+//                    showLoading(false)
+
                 }
             }
         }
@@ -320,6 +331,7 @@ class HomeFragment : Fragment() {
         sdf.timeZone=TimeZone.getDefault()
         return sdf.format(date)
     }
+
 
     private fun fetchWeatherData(lat: Double, lon: Double) {
         // Check if the latitude and longitude have changed

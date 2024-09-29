@@ -242,7 +242,7 @@ class AlertFragment : Fragment() {
 
             viewModel.insertAlarm(AlarmData(alarmRequest,alarmTimeInMillis))
           //  updateRequestCode()
-          //  Toast.makeText(requireContext(), "Alarm Set Successfully! ${viewModel.getAlertPrefs(ALERT_KEYS.ALARM_REQUEST_CODE,0)}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Alarm Set Successfully! ${viewModel.getAlertPrefs(ALERT_KEYS.ALARM_REQUEST_CODE,0)}", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "Failed to set alarm: ${e.message}", Toast.LENGTH_SHORT).show()
             Log.e("AlarmError", "Error setting alarm", e)
@@ -285,7 +285,7 @@ class AlertFragment : Fragment() {
             pendingIntent
         )
 
-     //   Toast.makeText(requireContext(), "Notification Scheduled! ${viewModel.getAlertPrefs(ALERT_KEYS.ALARM_REQUEST_CODE,0)}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Notification Scheduled! ${viewModel.getAlertPrefs(ALERT_KEYS.ALARM_REQUEST_CODE,0)}", Toast.LENGTH_SHORT).show()
     }
 
 

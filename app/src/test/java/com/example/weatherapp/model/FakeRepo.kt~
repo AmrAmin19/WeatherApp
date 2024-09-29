@@ -100,29 +100,6 @@ class FakeRepo(
         TODO("Not yet implemented")
     }
 
-    override fun getLocalCurrentWeather(): Flow<List<CurrentWeather>> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun insertCurrentWeather(currentWeather: CurrentWeather) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun deleteCurrentWeather(currentWeather: CurrentWeather) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun deleteAllCurrentWeather() {
-        TODO("Not yet implemented")
-    }
-
-    override fun getCurrentWeatherLocal(
-        weatherResponse: WeatherResponse,
-        currentWeatherResponse: CurrentWeatherResponse
-    ): CurrentWeather {
-        TODO("Not yet implemented")
-    }
-
     override fun getFavWeather(weatherResponse: WeatherResponse): FavWeather {
         TODO("Not yet implemented")
     }

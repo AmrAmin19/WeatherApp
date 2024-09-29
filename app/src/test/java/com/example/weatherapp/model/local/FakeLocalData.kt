@@ -1,6 +1,7 @@
 package com.example.weatherapp.model.local
 
 import com.example.weatherapp.model.AlarmData
+import com.example.weatherapp.model.CurrentWeather
 import com.example.weatherapp.model.FavWeather
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -31,6 +32,22 @@ class FakeLocalData(
     }
 
     override suspend fun deletAlarm(alarmData: AlarmData) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getCurrentWeather(): Flow<List<CurrentWeather>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun insertCurrentWeather(currentWeather: CurrentWeather) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteCurrentWeather(currentWeather: CurrentWeather) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteAllCurrentWeather() {
         TODO("Not yet implemented")
     }
 
